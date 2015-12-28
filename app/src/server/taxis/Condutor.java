@@ -12,45 +12,55 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class Condutor extends Utilizador{
+public class Condutor{
+    private String user;
+    private String pass;
     private String matricula;
     private String modelo;
+    private Local posicao;
     private ReentrantLock l;
     private Condition cond;
 
-    public Condutor(String u, String p, String mat, String mod, ReentrantLock l) {
-        super(u, p);
+    public Condutor(String u, String p, String mat, String mod) {
+        this.user = u;
+        this.pass = p;
         this.matricula = mat;
         this.modelo = mod;
-        this.l = l;
-        this.cond = l.newCondition();
     }
     
-    public Condutor(String u, String p, ReentrantLock l){
-        super(u, p);
-        this.matricula = "";
-        this.modelo = "";
-        this.cond = l.newCondition();
-    }
-
     public Condutor(Condutor c) {
-        super(c);
         this.matricula = c.getMatricula();
         this.modelo = c.getModelo();
         this.l = c.getLock();
         this.cond = c.getLock().newCondition();
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
     public String getMatricula() {
         return matricula;
     }
 
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }
-
     public String getModelo() {
         return modelo;
+    }
+
+    public Local getPosicao() {
+        return posicao;
+    }
+    
+    public ReentrantLock getLock(){
+        return this.l;
+    }
+    
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
     }
 
     public void setModelo(String modelo) {
@@ -71,9 +81,7 @@ public class Condutor extends Utilizador{
         cond.signal();
     }
     
-    public ReentrantLock getLock(){
-        return this.l;
-    }
+    
     
     
     

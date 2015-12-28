@@ -12,27 +12,41 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class Passageiro extends Utilizador{
+public class Passageiro{
+    private String user;
+    private String pass;
+    private Local posicao;
     private Local destino;
     private ReentrantLock l;
     private Condition cond;
     
 
-    public Passageiro(String u, String p, Local dest, ReentrantLock lock) {
-        super(u, p);
-        this.destino = dest.clone();
-        this.l = lock;
-        this.cond = l.newCondition();
-        
-    }
-    
-    public Passageiro(Passageiro p){
-        super(p);
-        this.getDestino();
-        this.l = p.getLock();
-        this.cond = l.newCondition();
+    public Passageiro(String u, String p) {
+        this.user = u;
+        this.pass = p;
+        this.posicao = new Local();
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public Local getPosicao() {
+        return posicao;
+    }
+    
+    public Local getDestino() {
+        return this.destino;
+    }
+    
+    public ReentrantLock getLock(){
+        return this.l;
+    }
+    
     public void block() throws InterruptedException {
         cond.await();
     }
@@ -41,17 +55,9 @@ public class Passageiro extends Utilizador{
         cond.signal();
     }
     
-    public ReentrantLock getLock(){
-        return this.l;
-    }
-
-    public Local getDestino() {
-        return this.destino;
-    }
-
     @Override
     public String toString() {
-        return "Passageiro{" + "nome=" + this.getUsername() + ", posicao=" +
+        return "Passageiro{" + "nome=" + this.getUser() + ", posicao=" +
                 this.getPosicao() + '}';
     }
 

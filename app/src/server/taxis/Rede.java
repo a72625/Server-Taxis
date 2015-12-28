@@ -4,8 +4,6 @@ package server.taxis;
 
 import static java.lang.Integer.MAX_VALUE;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**

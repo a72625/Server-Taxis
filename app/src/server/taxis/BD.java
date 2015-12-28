@@ -5,80 +5,56 @@
  */
 package server.taxis;
 
-import static java.lang.Integer.MAX_VALUE;
-import java.util.HashMap;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  *
- * @author rcamposinhos
- * atencao aos locks de leitura e escrita
+ * @author rcamposinhos atencao aos locks de leitura e escrita
  */
+public class BD implements Facade {
 
-public class BD{
-    private HashMap<String, Utilizador> utilizadores;
+    private Condutores condutores;
+    private Passageiros passageiros;
 
-    public BD(){
-        this.utilizadores = new HashMap<>();
+    public BD() {
+        this.condutores = new Condutores();
+        this.passageiros = new Passageiros();
     }
-    
 
-    public void addPassageiro(Passageiro p) throws UserExistsException{
-        if(this.utilizadores.containsKey(p.getUsername())){
-            throw new UserExistsException(p.getUsername());
+    @Override
+    public Boolean loginPass(String username, String password) throws UserExistsException {
+        Passageiro p = this.passageiros.getPassageiro(username);
+        if (p == null) {
+            if (!p.getPass().equals(password)) {
+                throw new UserExistsException();
+            }
+            return true;
         }
-        else{
-            this.utilizadores.put(p.getUsername(), new Passageiro(p));
-            //TODO
-            saveData();
-        }
-            
+        throw new UserExistsException();
     }
-    
 
-    public void addCondutor(Condutor c) throws UserExistsException{
-        if(this.utilizadores.containsKey(c.getUsername())){
-            throw new UserExistsException(c.getUsername());
+    @Override
+    public Boolean loginCond(String username, String password) throws UserExistsException {
+        Condutor c = this.condutores.getCondutor(username);
+        if (c == null) {
+            if (!c.getPass().equals(password)) {
+                throw new UserExistsException();
+            }
+            return true;
         }
-        else{
-            this.utilizadores.put(c.getUsername(), new Condutor(c));
-            //TODO
-            saveData();
-        }
+        throw new UserExistsException();
     }
-    
 
-    
-    public Utilizador getUser(String n){
-        Utilizador aux = null;
-        aux = utilizadores.get(n);
-        return aux; 
+    @Override
+    public Boolean addPass(String username, String password) throws UserExistsException {
+        Passageiro p = new Passageiro(username, password);
+        passageiros.addPassageiro(p);
+        return true;
     }
-    
-    public boolean loginCheck(Utilizador u){
-        Utilizador aux;
-        if(utilizadores.containsKey(u.getUsername())){
-            aux = utilizadores.get(u.getUsername()); 
-            return (aux.getPass().equals(u.getPass()));
-        }
-        else{
-            return false;
-        }   
+
+    @Override
+    public Boolean addCond(String username, String password, String mat, String mod) throws UserExistsException {
+        Condutor c = new Condutor(username, password, mat, mod);
+        condutores.addCondutor(c);
+        return true;
     }
-    
-    
-    
-    
-    
-    
-    
-    private void loadData(){
-        
-    }
-    
-    private void saveData(){
-        
-    }
-    
+
 }
