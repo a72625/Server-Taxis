@@ -12,13 +12,13 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class Condutor{
+public class Condutor implements autoClose{
     private String user;
     private String pass;
     private String matricula;
     private String modelo;
     private Local posicao;
-    private ReentrantLock l;
+    private final ReentrantLock lock = new ReentrantLock();
     private Condition cond;
 
     public Condutor(String u, String p, String mat, String mod) {
@@ -26,13 +26,6 @@ public class Condutor{
         this.pass = p;
         this.matricula = mat;
         this.modelo = mod;
-    }
-    
-    public Condutor(Condutor c) {
-        this.matricula = c.getMatricula();
-        this.modelo = c.getModelo();
-        this.l = c.getLock();
-        this.cond = c.getLock().newCondition();
     }
 
     public String getUser() {
@@ -42,7 +35,7 @@ public class Condutor{
     public String getPass() {
         return pass;
     }
-
+    
     public String getMatricula() {
         return matricula;
     }
@@ -51,12 +44,14 @@ public class Condutor{
         return modelo;
     }
 
+    
     public Local getPosicao() {
         return posicao;
     }
     
+    
     public ReentrantLock getLock(){
-        return this.l;
+        return this.lock;
     }
     
     public void setMatricula(String matricula) {
@@ -80,10 +75,9 @@ public class Condutor{
     public void unblock() {
         cond.signal();
     }
-    
-    
-    
-    
-    
-    
+
+    @Override
+    public void close() throws myException {
+        lock.unlock();
+    }
 }

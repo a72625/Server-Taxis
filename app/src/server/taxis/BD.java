@@ -19,42 +19,44 @@ public class BD implements Facade {
         this.passageiros = new Passageiros();
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     * @throws myException
+     */
     @Override
-    public Boolean loginPass(String username, String password) throws UserExistsException {
-        Passageiro p = this.passageiros.getPassageiro(username);
-        if (p == null) {
+    public Boolean loginPassageiro(String username, String password) throws myException {
+        try (Passageiro p = this.passageiros.getPassageiro(username)) {
             if (!p.getPass().equals(password)) {
-                throw new UserExistsException();
+                throw new myException("login ou password inválidos");
             }
             return true;
         }
-        throw new UserExistsException();
     }
 
     @Override
-    public Boolean loginCond(String username, String password) throws UserExistsException {
-        Condutor c = this.condutores.getCondutor(username);
-        if (c == null) {
+    public Boolean loginCondutor(String username, String password) throws myException {
+        try (Condutor c = this.condutores.getCondutor(username)) {
             if (!c.getPass().equals(password)) {
-                throw new UserExistsException();
+                throw new myException("login ou password inválidos");
             }
             return true;
         }
-        throw new UserExistsException();
     }
 
     @Override
-    public Boolean addPass(String username, String password) throws UserExistsException {
+    public Boolean addPassageiro(String username, String password) throws myException {
         Passageiro p = new Passageiro(username, password);
         passageiros.addPassageiro(p);
         return true;
     }
 
     @Override
-    public Boolean addCond(String username, String password, String mat, String mod) throws UserExistsException {
+    public Boolean addCondutor(String username, String password, String mat, String mod) throws myException {
         Condutor c = new Condutor(username, password, mat, mod);
         condutores.addCondutor(c);
         return true;
     }
-
 }

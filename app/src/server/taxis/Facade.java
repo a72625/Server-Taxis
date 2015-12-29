@@ -14,11 +14,11 @@ package server.taxis;
  */
 public interface Facade {
     
-    public Boolean loginPass(String username, String password)throws UserExistsException;
+    public Boolean loginPassageiro(String username, String password)throws myException;
     
-    public Boolean loginCond(String username, String password)throws UserExistsException;
+    public Boolean loginCondutor(String username, String password)throws myException;
    
-    public Boolean addPass(String username, String password)throws UserExistsException;
+    public Boolean addPassageiro(String username, String password)throws myException;
    
-    public Boolean addCond(String username, String password, String mat, String mod)throws UserExistsException;
+    public Boolean addCondutor(String username, String password, String mat, String mod)throws myException;
 }

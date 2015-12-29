@@ -14,8 +14,12 @@ public class ProjetoTaxis {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+   
+    
+    public static void main(String[] args) throws myException {
+        Facade f = null;
+        Interface ui = new Interface(f);
+        ui.start();
     }
     
 }

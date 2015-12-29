@@ -19,15 +19,17 @@ public class Condutores {
         this.condutores = new HashMap<>();
     }
 
-    public Condutor getCondutor(String cond) throws UserExistsException{
+    public Condutor getCondutor(String cond) throws myException{
         Condutor c = this.condutores.get(cond);
         if (c == null) {
-            throw new UserExistsException();
+            throw new myException("Condutor não existe");
         }
         return c;
     }
     
-    public void addCondutor(Condutor c){
-        condutores.put(c.getUser(), c);
+    public void addCondutor(Condutor c) throws myException{
+        if(!condutores.containsKey(c.getUser())){
+            condutores.put(c.getUser(), c);
+        }else throw new myException("Condutor já existe");
     }
 }

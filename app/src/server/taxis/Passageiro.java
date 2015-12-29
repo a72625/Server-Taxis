@@ -12,19 +12,18 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class Passageiro{
+public class Passageiro implements autoClose{
     private String user;
     private String pass;
     private Local posicao;
     private Local destino;
-    private ReentrantLock l;
+    private final ReentrantLock lock = new ReentrantLock();
     private Condition cond;
     
 
     public Passageiro(String u, String p) {
         this.user = u;
         this.pass = p;
-        this.posicao = new Local();
     }
 
     public String getUser() {
@@ -44,7 +43,7 @@ public class Passageiro{
     }
     
     public ReentrantLock getLock(){
-        return this.l;
+        return this.lock;
     }
     
     public void block() throws InterruptedException {
@@ -59,6 +58,11 @@ public class Passageiro{
     public String toString() {
         return "Passageiro{" + "nome=" + this.getUser() + ", posicao=" +
                 this.getPosicao() + '}';
+    }
+
+    @Override
+    public void close() throws myException {
+        lock.unlock();
     }
 
     

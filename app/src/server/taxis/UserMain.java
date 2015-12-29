@@ -5,10 +5,17 @@
  */
 package server.taxis;
 
+import java.io.IOException;
+
 /**
  *
  * @author Diogo Duarte
  */
-public class Client{
+public class UserMain{
     
+    public static void main(String[] args) throws IOException, myException{
+        User u = new User();
+        Interface ui = new Interface(u);
+        ui.start();
+    }
 }

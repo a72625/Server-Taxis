@@ -7,15 +7,9 @@ package server.taxis;
 
 /**
  *
- * @author rcamposinhos
+ * @author ruioliveiras
  */
-public class UserExistsException extends Exception {
-    public UserExistsException(){
-        super();
-    }
-    
-    public UserExistsException(String name) {
-        super(name);
-    }
-    
+public interface autoClose extends AutoCloseable{
+    @Override
+    public void close() throws myException;
 }

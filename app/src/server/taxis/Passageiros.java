@@ -19,14 +19,17 @@ public class Passageiros {
         this.passageiros = new HashMap<>();
     }
 
-    public Passageiro getPassageiro(String user) throws UserExistsException{
+    public Passageiro getPassageiro(String user) throws myException{
         Passageiro p = this.passageiros.get(user);
+        if (p == null) {
+            throw new myException("Passageiro não existe");
+        }
         return p;
     }
     
-    public void addPassageiro(Passageiro p) throws UserExistsException{
+    public void addPassageiro(Passageiro p) throws myException{
         if(!passageiros.containsKey(p.getUser())){
             passageiros.put(p.getUser(), p);
-        }else throw new UserExistsException();
+        }else throw new myException("Passageiro já existe");
     }
 }
