@@ -5,6 +5,9 @@
  */
 package Servidor;
 
+import Cliente.myException;
+import Cliente.Facade;
+import Cliente.BD;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -43,7 +46,7 @@ public class Server implements Runnable {
         return facade;
     }
 
-    public static void main(String[] args) throws IOException, myException {
+    public static void main(String[] args) throws IOException, myException{
         final Server rs = new Server();
         Thread t = new Thread(rs);
         t.start();

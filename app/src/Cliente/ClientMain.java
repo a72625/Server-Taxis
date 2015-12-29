@@ -6,7 +6,6 @@
 package Cliente;
 
 import java.io.IOException;
-import Servidor.myException;
 
 /**
  *

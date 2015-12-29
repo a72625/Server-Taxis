@@ -9,8 +9,6 @@ package Cliente;
 
 
 import java.util.Scanner;
-import Servidor.Facade;
-import Servidor.myException;
 
 /**
  *
