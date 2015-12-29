@@ -28,7 +28,7 @@ public class Server implements Runnable {
     private Facade facade;
 
     public Server() throws IOException {
-        ss = new ServerSocket(1050);
+        ss = new ServerSocket(2000);
         facade = new BD();
     }
 
@@ -50,8 +50,6 @@ public class Server implements Runnable {
         final Server rs = new Server();
         Thread t = new Thread(rs);
         t.start();
-        Interface ui = new Interface(rs.getFacade());
-        ui.start();
     }
 
     @Override
