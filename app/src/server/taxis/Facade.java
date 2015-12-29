@@ -18,7 +18,7 @@ public interface Facade {
     
     public Boolean loginCondutor(String username, String password)throws myException;
    
-    public Boolean addPassageiro(String username, String password)throws myException;
+    public Boolean addPassageiro()throws myException;
    
     public Boolean addCondutor(String username, String password, String mat, String mod)throws myException;
 }
