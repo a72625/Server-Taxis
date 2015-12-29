@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server.taxis;
+package Cliente;
 
 import java.io.IOException;
+import server.taxis.Interface;
+import server.taxis.myException;
 
 /**
  *
