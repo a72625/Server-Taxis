@@ -1,6 +1,6 @@
 /*
  */
-package server.taxis;
+package Servidor;
 
 import static java.lang.Integer.MAX_VALUE;
 import java.util.ArrayList;

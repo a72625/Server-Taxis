@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server.taxis;
+package Servidor;
 
 /** O objectivo desta interface é definir o que uma UI pode precisar para
  * imprimir ao longo da sua execução

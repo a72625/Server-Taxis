@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server.taxis;
+package Cliente;
 
 /**
  * Classe que abstrai a utilização da classe Scanner, escondendo todos os

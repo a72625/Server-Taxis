@@ -1,4 +1,4 @@
-package server.taxis;
+package Cliente;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -9,6 +9,8 @@ package server.taxis;
 
 
 import java.util.Scanner;
+import Servidor.Facade;
+import Servidor.myException;
 
 /**
  *

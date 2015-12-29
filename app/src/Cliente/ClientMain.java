@@ -6,8 +6,7 @@
 package Cliente;
 
 import java.io.IOException;
-import server.taxis.Interface;
-import server.taxis.myException;
+import Servidor.myException;
 
 /**
  *

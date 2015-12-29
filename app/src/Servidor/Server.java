@@ -11,11 +11,8 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.taxis.BD;
-import server.taxis.Facade;
-import server.taxis.Interface;
+import Cliente.Interface;
 import Cliente.ClientHandler;
-import server.taxis.myException;
 
 /**
  *

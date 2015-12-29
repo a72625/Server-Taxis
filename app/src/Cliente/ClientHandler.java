@@ -13,8 +13,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.taxis.Facade;
-import server.taxis.myException;
+import Servidor.Facade;
+import Servidor.myException;
 
 /**
  *

@@ -1,4 +1,4 @@
-package server.taxis;
+package Cliente;
 
 /**
  * Esta classe implementa um menu em modo texto.
