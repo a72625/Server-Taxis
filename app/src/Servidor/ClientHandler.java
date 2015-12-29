@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Cliente;
+package Servidor;
 
-import Servidor.Server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +26,7 @@ public class ClientHandler implements Runnable {
     private PrintWriter out;
 
     public ClientHandler(Server server, Socket socket, Facade facade) throws IOException {
-        this.server = server;
+        //this.server = server;
         this.socket = socket;
         this.data = facade;
     }
@@ -58,7 +57,7 @@ public class ClientHandler implements Runnable {
                         break;
                 }
             } while (op != 0);
-        } catch (IOException | myException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

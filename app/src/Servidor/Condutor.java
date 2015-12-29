@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Cliente;
+package Servidor;
 
+
+import Servidor.Local;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -27,6 +29,15 @@ public class Condutor implements autoClose{
         this.matricula = mat;
         this.modelo = mod;
     }
+
+    public Condutor(Condutor c) {
+        this.user = c.getUser();
+        this.pass = c.getPass();
+        this.matricula = c.getMatricula();
+        this.modelo = c.getModelo();
+    }
+    
+    
 
     public String getUser() {
         return user;

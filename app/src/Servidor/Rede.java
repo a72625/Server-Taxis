@@ -1,6 +1,6 @@
 /*
  */
-package Cliente;
+package Servidor;
 
 import static java.lang.Integer.MAX_VALUE;
 import java.util.ArrayList;
@@ -89,6 +89,7 @@ public class Rede{
         this.viagens.add(new Viagem(c, p));
     }
     
+    /*
     public ArrayList<Viagem> listViagensByUser(Utilizador u){
         ArrayList<Viagem> aux = new ArrayList<>();
         
@@ -107,6 +108,7 @@ public class Rede{
         return aux;
         
     }
+    */
     
     
 }

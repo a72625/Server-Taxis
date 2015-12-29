@@ -5,17 +5,13 @@
  */
 package Servidor;
 
-import Cliente.myException;
-import Cliente.Facade;
-import Cliente.BD;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import Cliente.Interface;
-import Cliente.ClientHandler;
 
 /**
  *

@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Cliente;
+package Servidor;
+
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,6 +26,15 @@ public class Passageiro implements autoClose{
         this.user = u;
         this.pass = p;
     }
+    
+    public Passageiro(Passageiro p){
+        this.user = p.getUser();
+        this.pass = p.getPass();
+        this.posicao = p.getPosicao();
+        this.destino = p.getDestino();
+        //this.lock = p.getLock();
+        //this.cond
+    }
 
     public String getUser() {
         return user;
@@ -35,11 +45,11 @@ public class Passageiro implements autoClose{
     }
 
     public Local getPosicao() {
-        return posicao;
+        return new Local(posicao);
     }
     
     public Local getDestino() {
-        return this.destino;
+        return new Local(destino);
     }
     
     public ReentrantLock getLock(){

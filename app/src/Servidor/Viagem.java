@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Cliente;
+package Servidor;
 
-import Cliente.Passageiro;
-import Cliente.Condutor;
-import Cliente.Local;
+import Servidor.Passageiro;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import sun.util.calendar.Gregorian;
@@ -64,8 +62,8 @@ public class Viagem {
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 	String date = sdf.format(data.getTime()); 
-        return "Viagem{" + "condutor=" + c.getUsername()+ ", passageiro=" + 
-                p.getUsername() + ", destino=" + destino + ", origem=" + origem
+        return "Viagem{" + "condutor=" + c.getUser() + ", passageiro=" + 
+                p.getUser() + ", destino=" + destino + ", origem=" + origem
                 + ", data=" + date + '}';
     }
 
