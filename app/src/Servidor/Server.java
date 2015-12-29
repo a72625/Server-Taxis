@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import server.taxis.BD;
 import server.taxis.Facade;
 import server.taxis.Interface;
-import Cliente.UserHandler;
+import Cliente.ClientHandler;
 import server.taxis.myException;
 
 /**
@@ -24,7 +24,7 @@ import server.taxis.myException;
 public class Server implements Runnable {
 
     private ServerSocket ss;
-    private Map<Integer, UserHandler> requests;
+    private Map<Integer, ClientHandler> requests;
     private Facade facade;
 
     public Server() throws IOException {
@@ -35,7 +35,7 @@ public class Server implements Runnable {
     public void start() throws IOException {
         while (true) {
             Socket cn = ss.accept();
-            UserHandler rn = new UserHandler(Server.this, cn, facade);
+            ClientHandler rn = new ClientHandler(Server.this, cn, facade);
             Thread t = new Thread(rn);
             t.start();
         }

@@ -20,7 +20,7 @@ import server.taxis.myException;
  *
  * @author Toshiba
  */
-public class UserHandler implements Runnable {
+public class ClientHandler implements Runnable {
 
     private Server server;
     private Socket socket;
@@ -28,7 +28,7 @@ public class UserHandler implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
 
-    public UserHandler(Server server, Socket socket, Facade facade) throws IOException {
+    public ClientHandler(Server server, Socket socket, Facade facade) throws IOException {
         this.server = server;
         this.socket = socket;
         this.data = facade;
@@ -61,12 +61,12 @@ public class UserHandler implements Runnable {
                 }
             } while (op != 0);
         } catch (IOException | myException ex) {
-            Logger.getLogger(UserHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 in.close();
             } catch (IOException ex) {
-                Logger.getLogger(UserHandler.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

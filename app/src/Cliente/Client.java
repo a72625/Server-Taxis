@@ -17,13 +17,13 @@ import server.taxis.myException;
  *
  * @author Toshiba
  */
-public class User implements Facade {
+public class Client implements Facade {
 
     private Socket user;
     BufferedReader in;
     PrintWriter out;
 
-    public User() throws IOException, myException {
+    public Client() throws IOException, myException {
         try {
             user = new Socket("localhost", 2000);
         } catch (java.net.ConnectException a) {

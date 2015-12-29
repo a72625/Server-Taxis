@@ -13,10 +13,10 @@ import server.taxis.myException;
  *
  * @author Diogo Duarte
  */
-public class UserMain{
+public class ClientMain{
     
     public static void main(String[] args) throws IOException, myException{
-        User u = new User();
+        Client u = new Client();
         Interface ui = new Interface(u);
         ui.start();
     }
