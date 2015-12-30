@@ -5,9 +5,6 @@
  */
 package Servidor;
 
-
-
-
 /**
  *
  * @author rcamposinhos atencao aos locks de leitura e escrita

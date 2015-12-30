@@ -5,7 +5,6 @@
  */
 package Servidor;
 
-
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -30,8 +29,8 @@ public class Passageiro implements autoClose{
         this.r = null;
         this.cond = null;
     }
-    
-    public Passageiro(Passageiro p){
+
+    public Passageiro(Passageiro p) {
         this.user = p.getUser();
         this.pass = p.getPass();
         this.posicao = p.getPosicao();
@@ -51,23 +50,14 @@ public class Passageiro implements autoClose{
     public Local getPosicao() {
         return new Local(posicao);
     }
-    
+
     public Local getDestino() {
         return new Local(destino);
     }
-    
-    public void block() throws InterruptedException {
-        cond.await();
-    }
-
-    public void unblock() {
-        cond.signal();
-    }
-    
     @Override
     public String toString() {
-        return "Passageiro{" + "nome=" + this.getUser() + ", posicao=" +
-                this.getPosicao() + '}';
+        return "Passageiro{" + "nome=" + this.getUser() + ", posicao="
+                + this.getPosicao() + '}';
     }
 
     @Override
