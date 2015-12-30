@@ -6,26 +6,18 @@
 package Servidor;
 
 
-import Servidor.Local;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  * @author rcamposinhos
  */
-public class Condutor implements autoClose{
-    private String user;
-    private String pass;
+public class Condutor extends Passageiro implements autoClose{
     private String matricula;
     private String modelo;
-    private Local posicao;
-    private final ReentrantLock lock = new ReentrantLock();
-    private Condition cond;
 
-    public Condutor(String u, String p, String mat, String mod) {
-        this.user = u;
-        this.pass = p;
+    public Condutor(String u, String p, String mat, String mod,Local pos) {
+        super(u,p);
         this.matricula = mat;
         this.modelo = mod;
     }

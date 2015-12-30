@@ -5,13 +5,8 @@
  */
 package Servidor;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -19,52 +14,54 @@ import java.util.logging.Logger;
  */
 public class ClientHandler implements Runnable {
 
+    private boolean login;
     private Server server;
     private Socket socket;
     private Facade data;
-    private BufferedReader in;
-    private PrintWriter out;
+    private Connect c;
 
     public ClientHandler(Server server, Socket socket, Facade facade) throws IOException {
-        //this.server = server;
-        this.socket = socket;
+        this.server = server;
         this.data = facade;
+        this.socket = socket;
+        this.login = false;
     }
 
     private void init() throws IOException {
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
+        c = new Connect(socket);
     }
 
     @Override
     public void run() {
         try {
-            String str = "string";
-            try {
-                init();
-            } catch (IOException ex) {
-                return;
-            }
-            int op = -27;
-            do {
-                switch (op = in.read()) {
-                    case 1:
-                        data.loginPassageiro(str,str);
-                        break;
-
-                    case 2:
-                        data.loginCondutor(str,str);
-                        break;
-                }
-            } while (op != 0);
+            init();
         } catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            return;
+        }
+
+        int codigo = -27;
+
+        try {
+            do {
+                codigo = c.readMessage();
+                switch (codigo) {
+                    case 1:
+                        Boolean b = data.login(c.getString(0));
+                        return; //function for code 1;
+                    case 2:// response(data.editUser(cs.popString(), cs.popString()),"");
+                        return;//function for code 2;
+                    case 3:
+                        //response(data.listUser();
+                        return;//function for code 3;
+                    case 4:// response(data.addObj(cs.popString()),"");
+                        break;
+                    
+                }
+            } while (true);
+        } catch (myException e) {
+            System.err.println(codigo + " - " + e.getMessage());
         }
     }
+
+    
 }

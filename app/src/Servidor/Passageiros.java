@@ -29,8 +29,10 @@ public class Passageiros {
     }
     
     public void addPassageiro(Passageiro p) throws myException{
-        if(!passageiros.containsKey(p.getUser())){
-            passageiros.put(p.getUser(), p);
-        }else throw new myException("Passageiro já existe");
+        passageiros.put(p.getUser(), p);
+    }
+    
+    public boolean passageiroExiste(String username) throws myException{
+        return passageiros.containsKey(username);
     }
 }
