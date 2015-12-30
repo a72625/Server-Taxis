@@ -5,9 +5,6 @@
  */
 package Servidor;
 
-
-
-
 /**
  *
  * @author rcamposinhos atencao aos locks de leitura e escrita
@@ -50,9 +47,9 @@ public class BD implements Facade {
     }
 
     @Override
-    public Boolean addPassageiro() throws myException {
-        //Passageiro p = new Passageiro(username, password);
-        //passageiros.addPassageiro(p);
+    public Boolean addPassageiro(String username, String password) throws myException {
+        Passageiro p = new Passageiro(username, password);
+        passageiros.addPassageiro(p);
         return true;
     }
 

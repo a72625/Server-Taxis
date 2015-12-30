@@ -5,7 +5,6 @@
  */
 package Servidor;
 
-
 import Servidor.Local;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,7 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class Condutor implements autoClose{
+public class Condutor implements autoClose {
+
     private String user;
     private String pass;
     private String matricula;
@@ -36,8 +36,6 @@ public class Condutor implements autoClose{
         this.matricula = c.getMatricula();
         this.modelo = c.getModelo();
     }
-    
-    
 
     public String getUser() {
         return user;
@@ -46,7 +44,7 @@ public class Condutor implements autoClose{
     public String getPass() {
         return pass;
     }
-    
+
     public String getMatricula() {
         return matricula;
     }
@@ -55,16 +53,14 @@ public class Condutor implements autoClose{
         return modelo;
     }
 
-    
     public Local getPosicao() {
         return posicao;
     }
-    
-    
-    public ReentrantLock getLock(){
+
+    public ReentrantLock getLock() {
         return this.lock;
     }
-    
+
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
@@ -75,10 +71,10 @@ public class Condutor implements autoClose{
 
     @Override
     public String toString() {
-        return "Condutor{" + "posicao=" + this.getPosicao() + ", matricula=" +
-                matricula + ", modelo=" + modelo + '}';
+        return "Condutor{" + "posicao=" + this.getPosicao() + ", matricula="
+                + matricula + ", modelo=" + modelo + '}';
     }
-    
+
     public void block() throws InterruptedException {
         cond.await();
     }

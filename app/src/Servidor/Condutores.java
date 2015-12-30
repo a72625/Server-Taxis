@@ -5,7 +5,6 @@
  */
 package Servidor;
 
-
 import java.util.HashMap;
 
 /**
@@ -20,17 +19,19 @@ public class Condutores {
         this.condutores = new HashMap<>();
     }
 
-    public Condutor getCondutor(String cond) throws myException{
+    public Condutor getCondutor(String cond) throws myException {
         Condutor c = this.condutores.get(cond);
         if (c == null) {
             throw new myException("Condutor não existe");
         }
         return c;
     }
-    
-    public void addCondutor(Condutor c) throws myException{
-        if(!condutores.containsKey(c.getUser())){
+
+    public void addCondutor(Condutor c) throws myException {
+        if (!condutores.containsKey(c.getUser())) {
             condutores.put(c.getUser(), c);
-        }else throw new myException("Condutor já existe");
+        } else {
+            throw new myException("Condutor já existe");
+        }
     }
 }

@@ -59,6 +59,8 @@ public class ClientHandler implements Runnable {
             } while (op != 0);
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (myException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 in.close();

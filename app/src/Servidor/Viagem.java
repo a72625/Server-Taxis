@@ -15,6 +15,7 @@ import sun.util.calendar.Gregorian;
  * @author rcamposinhos
  */
 public class Viagem {
+
     private static final float CUSTOUNIT = (float) 0.005; //custo por metro de percurso
     private static final float BANDEIRADA = 2;// custo por inicio do servico
     private static final int VELOCIDADE = 8;//vel. media 8m/s, 30km/h
@@ -31,39 +32,35 @@ public class Viagem {
         this.origem = new Local(p.getPosicao());
         this.data = new GregorianCalendar();
     }
-    
-    public Viagem(Viagem v){
+
+    public Viagem(Viagem v) {
         this.c = v.getCondutor();
         this.p = v.getPassageiro();
         this.destino = v.getDestino();
         this.origem = v.getOrigem();
         this.data = v.getData();
     }
-    
-    
-    
-    
-    public float custo(){
+
+    public float custo() {
         return (BANDEIRADA + CUSTOUNIT * this.origem.manDist(this.destino));
     }
-    
-    
+
     //tempo em segundos
-    public long tempoEspera(){
+    public long tempoEspera() {
         return (long) (this.c.getPosicao().manDist(this.origem) / VELOCIDADE);
     }
-    
+
     //tempo em segundos
-    public long tempoViagem(){
+    public long tempoViagem() {
         return (long) (this.origem.manDist(this.destino) / VELOCIDADE);
     }
 
     @Override
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-	String date = sdf.format(data.getTime()); 
-        return "Viagem{" + "condutor=" + c.getUser() + ", passageiro=" + 
-                p.getUser() + ", destino=" + destino + ", origem=" + origem
+        String date = sdf.format(data.getTime());
+        return "Viagem{" + "condutor=" + c.getUser() + ", passageiro="
+                + p.getUser() + ", destino=" + destino + ", origem=" + origem
                 + ", data=" + date + '}';
     }
 
@@ -106,14 +103,9 @@ public class Viagem {
     public void setDataToNow() {
         this.data = new GregorianCalendar();
     }
-    
-    public Viagem clone(){
+
+    public Viagem clone() {
         return new Viagem(this);
     }
-    
-    
-    
-    
-    
-    
+
 }

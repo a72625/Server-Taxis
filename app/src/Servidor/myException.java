@@ -12,7 +12,7 @@ package Servidor;
 public class myException extends Exception {
 
     protected String myMessage;
-    
+
     public myException(String myMessage) {
         super(myMessage);
         this.myMessage = myMessage;
@@ -20,7 +20,7 @@ public class myException extends Exception {
 
     @Override
     public String getMessage() {
-        return myMessage; 
+        return myMessage;
     }
 
     public String getMyMessage() {
