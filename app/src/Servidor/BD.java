@@ -5,16 +5,18 @@
  */
 package Servidor;
 
+import java.util.HashMap;
+
 /**
  *
  * @author rcamposinhos atencao aos locks de leitura e escrita
  */
-public class BD implements Facade {
+public class BD{
 
-    private Passageiros passageiros;
+    private HashMap<String,User> users;
 
     public BD(){
-        this.passageiros = new Passageiros();
+        this.users = new HashMap<>();
     }
 
     /**
@@ -24,9 +26,9 @@ public class BD implements Facade {
      * @return 
      * @throws Servidor.myException
      */
-    @Override
+    
     public Boolean login(String username, String password) throws myException{
-        try (Passageiro p = this.passageiros.getPassageiro(username)) {
+        try(Passageiro p = this.passageiros.getPassageiro(username)) {
             if (!p.getPass().equals(password)) {
                 throw new myException("login ou password inválidos");
             }
