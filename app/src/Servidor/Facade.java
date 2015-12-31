@@ -16,7 +16,7 @@ package Servidor;
  */
 public interface Facade {
     
-    public Boolean loginPassageiro(String username, String password)throws myException;
+    public Boolean login(String username, String password)throws myException;
     
     public Boolean loginCondutor(String username, String password)throws myException;
    

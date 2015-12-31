@@ -17,14 +17,14 @@ import java.net.Socket;
  * @author Diogo Duarte
  */
 public class Connect {
-    
+
     private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
-    private String[] atributos;
-    private int atrIndex;
-    
-    public Connect(Socket socket) throws IOException{
+    BufferedReader in;
+    PrintWriter out;
+    private String[] args;
+    private int argsIndex;
+
+    public Connect(Socket socket) throws IOException {
         this.socket = socket;
         InputStreamReader isr = new InputStreamReader(socket.getInputStream());
         in = new BufferedReader(isr);
@@ -34,7 +34,6 @@ public class Connect {
     }
 
     public int readMessage() throws myException {
-        String[] str;
         try {
             String aux = in.readLine();
 
@@ -44,22 +43,119 @@ public class Connect {
                 return -1;
             }
 
-            str = aux.split(",");
+            String[] str = this.mySplit(aux);
 
             int codigo, size;
 
             codigo = Integer.parseInt(str[0]);
             size = Integer.parseInt(str[1]);
-            atributos = new String[size];
+            args = new String[size];
 
             for (int i = 0; i < size && i + 2 < str.length; i++) {
-                atributos[i] = str[i + 2];
+                args[i] = str[i + 2];
             }
-            atrIndex = 0;
+            argsIndex = 0;
             return codigo;
 
         } catch (IOException | NumberFormatException ex) {
             throw new myException("Erro a ler");
         }
     }
+
+    public String getString(int index) throws myException {
+        if (index < args.length && index >= 0) {
+            return args[index];
+        }
+        throw new myException("Numero de argumentos inválido");
+    }
+
+    public String pop() throws myException {
+        return getString(argsIndex++);
+    }
+
+    private String[] mySplit(String mensagem) {
+        String[] str;
+        str = mensagem.split(",");
+        return str;
+    }
+
+    public void sendOK(boolean isOk, String message) throws myException {
+        String sIsOk;
+        if (isOk) {
+            sIsOk = "OK";
+        } else {
+            sIsOk = "NOTOK";
+        }
+        out.println(-1 + "," + 2 + "," + sIsOk + "," + message);
+    }
+
+    public boolean readOK() throws myException {
+        readMessage();
+        String sIsOk = pop();
+        if (sIsOk.equals("OK")) {
+            return true;
+        } else {
+            throw new myException(pop());
+        }
+    }
+
+    /*private boolean responseLogin(String[] mensagem) throws myException {
+     boolean resposta = false;
+     switch (mensagem[1]) {
+     case "password errada":
+     resposta = false;
+     throw new myException(mensagem[1]);
+     case "user nao existe":
+     resposta = false;
+     throw new myException(mensagem[1]);
+     case "ok":
+     resposta = true;
+     break;
+     }
+     return resposta;
+     }
+     public boolean response(String mensagem) throws myException {
+     String[] str = mySplit(mensagem);
+     int codigo = Integer.parseInt(str[0]);
+     boolean resposta = false;
+     switch (codigo) {
+     case 1:
+     responseLogin(str);
+     case 2:
+     responseRegistarP(str);
+     case 3:
+     responseRegistarC(str);
+     }
+     return;
+     }
+
+     
+
+    
+    
+     private boolean responseRegistarP(String[] mensagem) throws myException {
+     boolean resposta = false;
+     switch (mensagem[1]) {
+     case "user ja existe":
+     resposta = false;
+     throw new myException(mensagem[1]);
+     case "impossivel registar":
+     resposta = false;
+     throw new myException(mensagem[1]);
+     }
+     return resposta;
+     }
+
+     private boolean responseRegistarC(String[] mensagem) throws myException {
+     boolean resposta = false;
+     switch (mensagem[1]) {
+     case "user ja existe":
+     resposta = false;
+     throw new myException(mensagem[1]);
+     case "impossivel registar":
+     resposta = false;
+     throw new myException(mensagem[1]);
+     }
+     return resposta;
+     }*/
 }

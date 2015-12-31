@@ -46,7 +46,9 @@ public class ClientHandler implements Runnable {
                 codigo = c.readMessage();
                 switch (codigo) {
                     case 1:
-                        Boolean b = data.login(c.getString(0));
+                        Boolean b = data.login(c.pop(),c.pop());
+                        login = b;
+                        response(b,"");
                         return; //function for code 1;
                     case 2:// response(data.editUser(cs.popString(), cs.popString()),"");
                         return;//function for code 2;
@@ -62,6 +64,9 @@ public class ClientHandler implements Runnable {
             System.err.println(codigo + " - " + e.getMessage());
         }
     }
-
+    
+    public void response(Boolean b, String message) throws myException{
+        c.sendOK(b, message);
+    }
     
 }
