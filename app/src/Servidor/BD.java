@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos atencao aos locks de leitura e escrita
  */
-public class BD extends HashMap<String,User>{
+public class BD extends HashMap<String,User> implements Serializable{
 
     private String bdFilepath;
     private ReentrantLock l;
@@ -42,11 +43,14 @@ public class BD extends HashMap<String,User>{
     
     public Boolean registar(String username, String password){
         boolean flag = true;
-        User aux = new User(username, password);
-        l.lock();
-        aux = this.put(username, aux);
-        if(aux == null)
+        l.lock(); 
+        this.put(username, new User(username, password));
+        if(!this.containsKey(username))
             flag = false;
+        else{
+            //persistencia de dados
+            this.save(this.bdFilepath);
+        }
         l.unlock();
         return flag;
     }

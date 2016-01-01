@@ -6,6 +6,8 @@
 package Servidor;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,6 +22,11 @@ public class Server {
         int port;
         if(args.length == 0){
             port=2000;//2000 por omissao
+//            try {
+//                baseDados = load("bd.obj");
+//            } catch (Exception ex) {
+//                System.err.println(ex.getMessage()+".\nErro a ler bd.");
+//            }
             baseDados = new BD();//nova BD vazia
             baseDados.loadSample();
             System.out.println("Atribuída porta 2000."
