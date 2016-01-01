@@ -24,7 +24,7 @@ public class BD extends HashMap<String,User>{
 
     public BD(){
         super();
-        this.bdFilepath = null;
+        this.bdFilepath = "bd.obj";
         this.l = new ReentrantLock();
     }
 
@@ -33,9 +33,20 @@ public class BD extends HashMap<String,User>{
         boolean flag = false;
         l.lock();
         User u = this.get(username);
-        if (u.getPass().equals(password)){
+        if (u.getUser().equals(username) && u.getPass().equals(password)){
             flag = true;
         }
+        l.unlock();
+        return flag;
+    }
+    
+    public Boolean registar(String username, String password){
+        boolean flag = true;
+        User aux = new User(username, password);
+        l.lock();
+        aux = this.put(username, aux);
+        if(aux == null)
+            flag = false;
         l.unlock();
         return flag;
     }
@@ -48,10 +59,10 @@ public class BD extends HashMap<String,User>{
         this.bdFilepath = bdFilepath;
     }
     
-    public void save(){
+    public void save(String fileName){
          try{
              ObjectOutputStream out = new ObjectOutputStream(
-                     new FileOutputStream(bdFilepath));
+                     new FileOutputStream(fileName));
              out.writeObject(this);
              out.close();
           }catch(IOException e){e.getMessage(); }

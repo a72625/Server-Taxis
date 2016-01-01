@@ -60,6 +60,7 @@ public class ServerThread extends Thread{
                 break;
             case '2':
                 //register
+                registar(msg);
                 break;
             case '3':
                 //
@@ -85,7 +86,21 @@ public class ServerThread extends Thread{
         }
         else{
             cs.sendMessage("1,password errada");
-        }
+        }   
+    }
+    
+    public void registar(String[] msg){
+        String user = msg[1];
+        String pass = msg[2];
         
+        if(bd.containsKey(user)){
+            cs.sendMessage("2,user ja existe");
+        }
+        else if(bd.registar(user, pass)){
+            cs.sendMessage("2,ok");
+        }
+        else{
+            cs.sendMessage("2,impossivel registar");
+        }
     }
 }
