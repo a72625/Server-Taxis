@@ -25,7 +25,7 @@ public class BD extends HashMap<String,User> implements Serializable{
 
     public BD(){
         super();
-        this.bdFilepath = "bd.obj";
+        this.bdFilepath = "bd";
         this.l = new ReentrantLock();
     }
 
@@ -68,6 +68,7 @@ public class BD extends HashMap<String,User> implements Serializable{
              ObjectOutputStream out = new ObjectOutputStream(
                      new FileOutputStream(fileName));
              out.writeObject(this);
+             out.flush();
              out.close();
           }catch(IOException e){e.getMessage(); }
     }
