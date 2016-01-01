@@ -51,7 +51,7 @@ public class Rede {
         l.lock();
 
         while (this.condutoresQueue.isEmpty()) {
-            p.block();
+            //p.block();
         }
 
         for (Condutor c : this.condutoresQueue) {

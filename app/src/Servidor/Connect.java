@@ -18,21 +18,25 @@ import java.net.Socket;
  */
 public class Connect {
 
-    private Socket socket;
-    BufferedReader in;
-    PrintWriter out;
-    private String[] args;
-    private int argsIndex;
+    private Socket cs;
+    private BufferedReader in;
+    private PrintWriter out;
 
     public Connect(Socket socket) throws IOException {
-        this.socket = socket;
-        InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-        in = new BufferedReader(isr);
-
-        OutputStreamWriter osr = new OutputStreamWriter(socket.getOutputStream());
-        out = new PrintWriter(osr);
+        this.cs = socket;
+        this.in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+        this.out = new PrintWriter(cs.getOutputStream(),true);
+    }
+    
+    public String readMessage() throws IOException{
+        return in.readLine();
+    }
+    
+    public void sendMessage(String msg){
+        out.println(msg);
     }
 
+    /*
     public int readMessage() throws myException {
         try {
             String aux = in.readLine();

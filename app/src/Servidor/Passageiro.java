@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class Passageiro implements autoClose{
+public class Passageiro{
     
     private String user;
     private String pass;
@@ -25,6 +25,15 @@ public class Passageiro implements autoClose{
         this.user = u;
         this.pass = p;
         this.posicao = new Local();
+        this.destino = new Local();
+        this.r = null;
+        this.cond = null;
+    }
+    
+    public Passageiro(String u, String p, Local pos) {
+        this.user = u;
+        this.pass = p;
+        this.posicao = new Local(pos);
         this.destino = new Local();
         this.r = null;
         this.cond = null;
@@ -60,8 +69,4 @@ public class Passageiro implements autoClose{
                 + this.getPosicao() + '}';
     }
 
-    @Override
-    public void close() throws myException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

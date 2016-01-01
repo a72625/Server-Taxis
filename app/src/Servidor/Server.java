@@ -4,57 +4,77 @@
  * and open the template in the editor.
  */
 package Servidor;
-
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.net.*;
 
 /**
  *
- * @author ruioliveiras
+ * @author rcamposinhos
  */
-public class Server implements Runnable {
-
-    private ServerSocket ss;
-    private Map<Integer, ClientHandler> requests;
-    private Facade facade;
-
-    public Server() throws IOException {
-        ss = new ServerSocket(2000);
-        facade = new BD();
-    }
-
-    public void start() throws IOException {
-        while (true) {
-            Socket cn = ss.accept();
-            ClientHandler rn = new ClientHandler(Server.this, cn, facade);
-            Thread t = new Thread(rn);
-            t.start();
+public class Server {
+    
+    private static BD baseDados = null;
+    private static String bdFilePath = null;
+    
+    public static void main(String[] args) {
+        int port;
+        if(args.length == 0){
+            port=2000;//2000 por omissao
+            Server.baseDados = new BD();//nova BD vazia
+            Server.baseDados.loadSample();
+            System.out.println("Atribuída porta 2000."
+                    + "\nBase de dados inicializada vazia.");
+            
+        }
+        else if(args.length == 1){
+            try{
+                port = Integer.parseInt(args[0]);
+                Server.baseDados = new BD();//nova BD vazia
+                Server.baseDados.loadSample();
+                System.out.println("Base de dados inicializada vazia.");
+            }
+            catch(NumberFormatException e){
+                System.err.println(e.getMessage()+".\nAtribuída porta 2000.");
+                port=2000;
+            } 
+        }
+        else{
+            try{
+                port = Integer.parseInt(args[0]);
+            }
+            catch(NumberFormatException e){
+                System.err.println(e.getMessage()+".\nAtribuída porta 2000.");
+                port=2000;
+            } 
+            bdFilePath = args[1];
+            try{
+                Server.baseDados.load(bdFilePath);//carrega ficheiro
+            }
+            catch(Exception e){
+                System.err.println("Não foi possível abrir o ficheiro."
+                        + "\nBase de dados inicializada vazia.");
+                Server.baseDados = new BD();//nova BD vazia
+            }
         }
 
-    }
 
-    public Facade getFacade() {
-        return facade;
-    }
 
-    public static void main(String[] args) throws IOException, myException{
-        final Server rs = new Server();
-        Thread t = new Thread(rs);
-        t.start();
-    }
+        try{
+            ServerSocket ss = new ServerSocket(port);
+            Socket cs = null;
+            Rede rede = new Rede();//iniciada vazia
 
-    @Override
-    public void run() {
-        try {
-            this.start();
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            while((cs = ss.accept()) != null){
+                ServerThread t = new ServerThread(cs, baseDados, rede);
+                t.start();
+            }
         }
+        catch(IOException e){
+            System.err.println(e.getMessage());
+        }
+        
     }
+    
 
+    
 }

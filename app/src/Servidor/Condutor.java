@@ -12,25 +12,23 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class Condutor extends Passageiro implements autoClose{
+public class Condutor extends Passageiro{
 
-    private String user;
-    private String pass;
     private String matricula;
     private String modelo;
 
-    public Condutor(String u, String p, String mat, String mod,Local pos) {
-        super(u,p);
+    public Condutor(String u, String p, String mat, String mod, Local pos) {
+        super(u,p,pos);
         this.matricula = mat;
         this.modelo = mod;
     }
-    public String getUser() {
-        return user;
+    
+    public Condutor(Condutor c){
+        super(c);
+        this.matricula = c.getMatricula();
+        this.modelo = c.getModelo();
     }
 
-    public String getPass() {
-        return pass;
-    }
 
     public String getMatricula() {
         return matricula;
@@ -47,10 +45,9 @@ public class Condutor extends Passageiro implements autoClose{
         this.modelo = modelo;
     }
 
-    @Override
-    public String toString() {
-        return "Condutor{" + "posicao=" + this.getPosicao() + ", matricula="
-                + matricula + ", modelo=" + modelo + '}';
-    }
+//    public String toString() {
+//        return "Condutor{" + "posicao=" + this.getPosicao() + ", matricula="
+//                + matricula + ", modelo=" + modelo + '}';
+//    }
 
 }
