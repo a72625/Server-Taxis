@@ -13,15 +13,15 @@ import java.net.*;
  */
 public class Server {
     
-    private static BD baseDados = null;
-    private static String bdFilePath = null;
     
     public static void main(String[] args) {
+        BD baseDados = null;
+        String bdFilePath = null;
         int port;
         if(args.length == 0){
             port=2000;//2000 por omissao
-            Server.baseDados = new BD();//nova BD vazia
-            Server.baseDados.loadSample();
+            baseDados = new BD();//nova BD vazia
+            baseDados.loadSample();
             System.out.println("Atribuída porta 2000."
                     + "\nBase de dados inicializada vazia.");
             
@@ -29,8 +29,8 @@ public class Server {
         else if(args.length == 1){
             try{
                 port = Integer.parseInt(args[0]);
-                Server.baseDados = new BD();//nova BD vazia
-                Server.baseDados.loadSample();
+                baseDados = new BD();//nova BD vazia
+                baseDados.loadSample();
                 System.out.println("Base de dados inicializada vazia.");
             }
             catch(NumberFormatException e){
@@ -48,12 +48,12 @@ public class Server {
             } 
             bdFilePath = args[1];
             try{
-                Server.baseDados.load(bdFilePath);//carrega ficheiro
+                baseDados = load(bdFilePath);//carrega ficheiro
             }
             catch(Exception e){
                 System.err.println("Não foi possível abrir o ficheiro."
                         + "\nBase de dados inicializada vazia.");
-                Server.baseDados = new BD();//nova BD vazia
+                baseDados = new BD();//nova BD vazia
             }
         }
 
@@ -73,6 +73,24 @@ public class Server {
             System.err.println(e.getMessage());
         }
         
+    }
+    
+    public static BD load(String file) throws Exception{
+        BD res=null;
+        Object read;
+        try{
+           ObjectInputStream in = 
+                   new ObjectInputStream(new FileInputStream(file));
+           read = in.readObject(); 
+           if(read instanceof BD){
+               res = (BD) read;
+               res.setBdFilepath(file);
+           }
+           in.close();
+        }catch(IOException | ClassNotFoundException i){
+           i.getMessage();
+        }
+        return res;
     }
     
 

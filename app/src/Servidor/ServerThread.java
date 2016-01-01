@@ -81,7 +81,7 @@ public class ServerThread extends Thread{
             cs.sendMessage("1,user nao existe");
         }
         else if(bd.login(user,pass)){
-            cs.sendMessage("1,user nao existe");
+            cs.sendMessage("1,ok");
         }
         else{
             cs.sendMessage("1,password errada");
