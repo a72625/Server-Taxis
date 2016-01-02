@@ -7,44 +7,33 @@ package Servidor;
 
 
 import java.io.Serializable;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  * @author rcamposinhos
  */
-public class Condutor implements Serializable{
+public class Condutor extends Passageiro implements Serializable{
 
     private String matricula;
     private String modelo;
     private Viagem viagem;
-    private Local atual;
-    private Local destino;
-    private ReentrantLock l;
-    private Condition cond;
-    private String user;
 
     public Condutor(String u, Rede r, String mat, String mod) {
-        this.user = u;
-        this.atual = new Local();
-        this.destino = new Local();
-        this.l = r.getLock();
-        this.cond = l.newCondition();
+        super(u, r);
         this.matricula = mat;
         this.modelo = mod;
         this.viagem = null;
     }
     
     public Condutor(String u, Local a, Rede r,String mat, String mod){
-        super(u,a,r);
+        super(u, a, r);
         this.matricula = mat;
         this.modelo = mod;
         this.viagem = null;
     }
     
     public Condutor(String u, Local a, Local d, Rede r, String mat, String mod){
-        super(u,a,d,r);
+        super(u, a, d, r);
         this.matricula = mat;
         this.modelo = mod;
         this.viagem = null;
@@ -81,5 +70,5 @@ public class Condutor implements Serializable{
     public void setViagem(Viagem viagem) {
         this.viagem = viagem;
     }
-
+    
 }
