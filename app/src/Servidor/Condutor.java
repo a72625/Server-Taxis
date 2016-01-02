@@ -70,5 +70,6 @@ public class Condutor extends Passageiro implements Serializable{
     public void setViagem(Viagem viagem) {
         this.viagem = viagem;
     }
+
     
 }

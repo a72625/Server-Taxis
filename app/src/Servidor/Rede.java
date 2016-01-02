@@ -101,13 +101,15 @@ public class Rede implements Serializable{
     }
 
     public Passageiro nextPassageiro(Condutor c) throws InterruptedException {
+        l.lock();
         Passageiro p = null;
         while(this.passageirosQueue.isEmpty()){
             c.block();
         }
         p = this.passageirosQueue.get(0);
         //acorda passageiro
-        //p.unblock();
+        p.unblock();
+        l.unlock();
 
         return p;
 
