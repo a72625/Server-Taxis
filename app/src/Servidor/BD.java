@@ -17,6 +17,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,7 +38,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     public Boolean login(String username, String password) {
         boolean flag = false;
         l.lock();
-        User u = this.get(username);
+        User u = super.get(username);
         if (u.getUser().equals(username) && u.getPass().equals(password)) {
             flag = true;
         }
@@ -44,18 +46,21 @@ public class BD extends HashMap<String, User> implements Serializable {
         return flag;
     }
 
-    public Boolean registar(String username, String password) throws IOException {
+    public Boolean registar(String username, String password){
         boolean flag = true;
         l.lock();
-        this.put(username, new User(username, password));
-        if (!this.containsKey(username)) {
-            flag = false;
-        } else {
+        super.put(username, new User(username, password));
+        try {
             //persistencia de dados
             this.save(this.bdFilepath);
+        } catch (IOException ex) {
+            flag = false;
         }
-        l.unlock();
-        return flag;
+        
+        finally{
+            l.unlock();
+            return flag;
+        }
     }
 
     public String getBdFilepath() {
@@ -66,7 +71,7 @@ public class BD extends HashMap<String, User> implements Serializable {
         this.bdFilepath = bdFilepath;
     }
 
-    public void save(String fileName) throws IOException {
+    private void save(String fileName) throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(
                 new FileOutputStream(fileName));
         out.writeObject(this);

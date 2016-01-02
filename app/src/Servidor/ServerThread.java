@@ -86,7 +86,7 @@ public class ServerThread extends Thread{
         }   
     }
     
-    public void registar(String[] msg) throws IOException{
+    public void registar(String[] msg){
         String user = msg[1];
         String pass = msg[2];
         

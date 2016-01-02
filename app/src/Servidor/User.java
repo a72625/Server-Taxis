@@ -20,6 +20,11 @@ public class User implements Serializable{
         this.user = u;
         this.pass = p;
     }
+    
+    public User(){
+        this.user = "";
+        this.pass = "";
+    }
 
     public User(User p) {
         this.user = p.getUser();
