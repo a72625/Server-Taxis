@@ -152,8 +152,9 @@ public class ServerThread extends Thread{
                                     Integer.parseInt(msg[5]));
         Condutor c = new Condutor(user, atual, rede, mat, mod);
         
+        rede.enqueueDriver(c);
         try {
-            rede.enqueueDriver(c);         
+            Passageiro p = rede.nextPassageiro(c);
             //depois de acordar:
             //PROTOCOLO
             /*4,ja foi atribuida uma deslocacao,codigoViagem,

@@ -32,15 +32,21 @@ public class Rede implements Serializable{
         return l;
     }
 
-    public void enqueueDriver(Condutor c) throws InterruptedException {
+    public void enqueueDriver(Condutor c){
         l.lock();
         this.condutoresQueue.add(c);
         l.unlock();
         
-        //adormece ate haver passageiros a criar viagens
-        while(c.getViagem() == null){
-            c.block();
-        }
+//        //acorda passageiro eventualmente adormecido
+//        Passageiro p = this.nextPassageiro();
+//        if(p!= null)
+//            p.unblock();
+//        
+//        
+//        //adormece ate haver passageiros
+//        while(c.getViagem() == null){
+//            c.block();
+//        }
     }
     
     public boolean dequeueDriver(Condutor c){
@@ -94,10 +100,16 @@ public class Rede implements Serializable{
         return aux;
     }
 
-    private Passageiro nextPassageiro(Condutor c) {
+    public Passageiro nextPassageiro(Condutor c) throws InterruptedException {
+        Passageiro p = null;
+        while(this.passageirosQueue.isEmpty()){
+            c.block();
+        }
+        p = this.passageirosQueue.get(0);
+        //acorda passageiro
+        //p.unblock();
 
-        //while(this.passageirosQueue.isEmpty()) await
-        return this.passageirosQueue.get(0);
+        return p;
 
     }
 

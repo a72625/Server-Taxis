@@ -7,20 +7,30 @@ package Servidor;
 
 
 import java.io.Serializable;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  * @author rcamposinhos
  */
-public class Condutor extends Passageiro implements Serializable{
+public class Condutor implements Serializable{
 
     private String matricula;
     private String modelo;
     private Viagem viagem;
+    private Local atual;
+    private Local destino;
+    private ReentrantLock l;
+    private Condition cond;
+    private String user;
 
     public Condutor(String u, Rede r, String mat, String mod) {
-        super(u,r);
+        this.user = u;
+        this.atual = new Local();
+        this.destino = new Local();
+        this.l = r.getLock();
+        this.cond = l.newCondition();
         this.matricula = mat;
         this.modelo = mod;
         this.viagem = null;

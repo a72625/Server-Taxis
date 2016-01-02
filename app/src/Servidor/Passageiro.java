@@ -18,27 +18,31 @@ public class Passageiro implements Serializable{
     private String user;
     private Local atual;
     private Local destino;
+    private ReentrantLock l;
     private Condition cond;
     
     public Passageiro(String u, Rede r) {
         this.user = u;
         this.atual = new Local();
         this.destino = new Local();
-        this.cond = r.getLock().newCondition();
+        this.l = r.getLock();
+        this.cond = l.newCondition();
     }
     
     public Passageiro(String u, Local a, Local d, Rede r) {
         this.user = u;
         this.atual = new Local(a);
         this.destino = new Local(d);
-        this.cond = r.getLock().newCondition();
+        this.l = r.getLock();
+        this.cond = l.newCondition();
     }
     
     public Passageiro(String u, Local a, Rede r){
         this.user = u;
         this.atual = new Local(a);
         this.destino = new Local();
-        this.cond = r.getLock().newCondition();
+        this.l = r.getLock();
+        this.cond = l.newCondition();
     }
 
     public String getUser() {
