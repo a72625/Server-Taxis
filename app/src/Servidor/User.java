@@ -6,8 +6,6 @@
 package Servidor;
 
 import java.io.Serializable;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *

@@ -22,37 +22,38 @@ public class Server {
         int port;
         if (args.length == 0) {
             port = 2000;//2000 por omissao
+            System.out.println("Atribuída porta 2000.");
             baseDados = new BD();//nova BD vazia
             try {
                 load("bd");
+                System.out.println("Base de dados inicializada com sucesso.");
             } catch (IOException | ClassNotFoundException ex) {
-                System.err.println(ex.getMessage() + ".\nErro a ler bd.");
+                System.err.println("Erro a ler bd.");
                 baseDados.loadSample();
-                System.out.println("Atribuída porta 2000."
-                        + "\nBase de dados inicializada com user rui, miguel e diogo.");
+                System.out.println("Nova base de dados inicializada.");
             }
 
         } else if (args.length == 1) {
             try {
                 port = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                System.err.println(e.getMessage() + ".\nAtribuída porta 2000.");
+                System.err.println("Erro a ler a porta. Atribuída porta 2000.");
                 port = 2000;
             }
             baseDados = new BD();//nova BD vazia
             try {
                 load("bd");
+                System.out.println("Base de dados inicializada com sucesso.");
             } catch (IOException | ClassNotFoundException ex) {
-                System.err.println(ex.getMessage() + ".\nErro a ler bd.");
+                System.err.println("Erro a ler bd.");
                 baseDados.loadSample();
-                System.out.println("Atribuída porta 2000."
-                        + "\nBase de dados inicializada com user rui, miguel e diogo.");
+                System.out.println("Nova base de dados inicializada.");
             }
         } else {
             try {
                 port = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                System.err.println(e.getMessage() + ".\nAtribuída porta 2000.");
+                System.err.println("Erro a ler a porta. Atribuída porta 2000.");
                 port = 2000;
             }
             bdFilePath = args[1];
@@ -60,10 +61,9 @@ public class Server {
             try {
                 load(bdFilePath);
             } catch (IOException | ClassNotFoundException ex) {
-                System.err.println(ex.getMessage() + ".\nErro a ler bd.");
+                System.err.println("Erro a ler bd.");
                 baseDados.loadSample();
-                System.out.println("Atribuída porta 2000."
-                        + "\nBase de dados inicializada com user rui, miguel e diogo.");
+                System.out.println("Nova base de dados inicializada.");
             }
         }
 
