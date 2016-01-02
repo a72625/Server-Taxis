@@ -7,7 +7,6 @@ package Servidor;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +36,8 @@ public class ServerThread extends Thread{
         }
          catch(IOException e){
             System.err.println(e.toString());
+        } catch (myException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     
     }
@@ -47,7 +48,7 @@ public class ServerThread extends Thread{
         return str;
     }
     
-    public void dispacher(String mensagem) throws IOException{
+    public void dispacher(String mensagem) throws IOException, myException{
         //partir mensagem em campos:
         String[] msg = mySplit(mensagem);
         //ver codigo da mensagem:
@@ -124,7 +125,7 @@ public class ServerThread extends Thread{
         rede.enqueuePassenger(p);
         try {
             Condutor c = rede.closestDriver(p);
-            Viagem v = rede.addViagem(c, p);
+            Viagem v = rede.addViagemPassageiro(c, p);
             long espera = v.tempoEspera();
             long chegada = v.tempoViagem();
             float preco = v.custo();
@@ -142,7 +143,7 @@ public class ServerThread extends Thread{
         }        
     }
     
-    public void anunDisp(String[] msg){
+    public void anunDisp(String[] msg) throws myException{
         //PROTOCOLO:
         //4,user,matricula,modelo,xAtual,yAtual
         String user = msg[1];
@@ -155,16 +156,17 @@ public class ServerThread extends Thread{
         rede.enqueueDriver(c);
         try {
             Passageiro p = rede.nextPassageiro(c);
+            Viagem v = rede.addViagemCondutor(c, p);
             //depois de acordar:
             //PROTOCOLO
             /*4,ja foi atribuida uma deslocacao,codigoViagem,
                         usernamePassageiro,xAtual,yAtual,xDest,yDest*/
             //bloqueia para o passageiro criar viagem
-            rede.getLock().lock();
-            c.await();
-            rede.getLock().unlock();
+            //rede.getLock().lock();
+            //c.await();
+            //rede.getLock().unlock();
             //depois do passageiro desbloquear o condutor
-            Viagem v = c.getViagem();
+            //Viagem v = c.getViagem();
             long codigo = v.getCodigo();
             String passageiro = v.getPassageiro().getUser();
             Local origem = v.getOrigem();

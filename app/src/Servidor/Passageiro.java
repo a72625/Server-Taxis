@@ -20,6 +20,7 @@ public class Passageiro implements Serializable{
     private Local destino;
     private ReentrantLock l;
     private Condition cond;
+    private Viagem viagem;
     
     public Passageiro(String u, Rede r) {
         this.user = u;
@@ -27,6 +28,7 @@ public class Passageiro implements Serializable{
         this.destino = new Local();
         this.l = r.getLock();
         this.cond = l.newCondition();
+        this.viagem = null;
     }
     
     public Passageiro(String u, Local a, Local d, Rede r) {
@@ -35,6 +37,7 @@ public class Passageiro implements Serializable{
         this.destino = new Local(d);
         this.l = r.getLock();
         this.cond = l.newCondition();
+        this.viagem = null;
     }
     
     public Passageiro(String u, Local a, Rede r){
@@ -43,6 +46,7 @@ public class Passageiro implements Serializable{
         this.destino = new Local();
         this.l = r.getLock();
         this.cond = l.newCondition();
+        this.viagem = null;
     }
 
     public String getUser() {
@@ -69,10 +73,11 @@ public class Passageiro implements Serializable{
         this.cond.signal();
     }
     
-    
-    
-    
+    public Viagem getViagem() {
+        return viagem;
+    }
 
-
-
+    public void setViagem(Viagem viagem) {
+        this.viagem = viagem;
+    }
 }
