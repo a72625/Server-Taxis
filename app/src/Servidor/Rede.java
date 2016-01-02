@@ -40,12 +40,12 @@ public class Rede implements Serializable{
 //        //acorda passageiro eventualmente adormecido
 //        Passageiro p = this.nextPassageiro();
 //        if(p!= null)
-//            p.unblock();
+//            p.signal();
 //        
 //        
 //        //adormece ate haver passageiros
 //        while(c.getViagem() == null){
-//            c.block();
+//            c.await();
 //        }
     }
     
@@ -80,7 +80,7 @@ public class Rede implements Serializable{
 
         while(this.condutoresQueue.isEmpty()) {
             //nao ha condutores -> adormece passageiro 
-            p.block();
+            p.await();
         }
 
         for(Condutor c : this.condutoresQueue) {
@@ -104,11 +104,11 @@ public class Rede implements Serializable{
         l.lock();
         Passageiro p = null;
         while(this.passageirosQueue.isEmpty()){
-            c.block();
+            c.await();
         }
         p = this.passageirosQueue.get(0);
         //acorda passageiro
-        p.unblock();
+        p.signal();
         l.unlock();
 
         return p;
@@ -127,7 +127,7 @@ public class Rede implements Serializable{
             //passa ref. da viagem ao condutor e
             //acorda thread do condutor para continuar a comunicacao dela
             c.setViagem(v);
-            c.unblock(); 
+            c.signal(); 
         }
         else{
             throw new myException("");

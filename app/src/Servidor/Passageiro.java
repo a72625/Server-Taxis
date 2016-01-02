@@ -61,11 +61,11 @@ public class Passageiro implements Serializable{
         return cond;
     }
     
-    public void block() throws InterruptedException{
+    public void await() throws InterruptedException{
         this.cond.await();
     }
     
-    public void unblock(){
+    public void signal(){
         this.cond.signal();
     }
     

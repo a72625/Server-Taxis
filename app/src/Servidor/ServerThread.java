@@ -161,7 +161,7 @@ public class ServerThread extends Thread{
                         usernamePassageiro,xAtual,yAtual,xDest,yDest*/
             //bloqueia para o passageiro criar viagem
             rede.getLock().lock();
-            c.block();
+            c.await();
             rede.getLock().unlock();
             //depois do passageiro desbloquear o condutor
             Viagem v = c.getViagem();
