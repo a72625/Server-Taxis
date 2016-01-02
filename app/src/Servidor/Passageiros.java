@@ -5,13 +5,14 @@
  */
 package Servidor;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author Toshiba
  */
-public class Passageiros {
+public class Passageiros implements Serializable{
 
     private HashMap<String, Passageiro> passageiros;
 

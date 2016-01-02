@@ -2,6 +2,7 @@
  */
 package Servidor;
 
+import java.io.Serializable;
 import static java.lang.Integer.MAX_VALUE;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  *
  */
-public class Rede {
+public class Rede implements Serializable{
 
     private ArrayList<Viagem> viagens;
     private ArrayList<Passageiro> passageirosQueue;

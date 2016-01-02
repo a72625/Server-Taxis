@@ -5,10 +5,7 @@
  */
 package Servidor;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.*;
 
 /**
@@ -47,7 +44,7 @@ public class ServerThread extends Thread{
         return str;
     }
     
-    public void dispacher(String mensagem){
+    public void dispacher(String mensagem) throws IOException{
         //partir mensagem em campos:
         String[] msg = mySplit(mensagem);
         //ver codigo da mensagem:
@@ -89,7 +86,7 @@ public class ServerThread extends Thread{
         }   
     }
     
-    public void registar(String[] msg){
+    public void registar(String[] msg) throws IOException{
         String user = msg[1];
         String pass = msg[2];
         

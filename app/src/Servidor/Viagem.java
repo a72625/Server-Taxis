@@ -6,6 +6,7 @@
 package Servidor;
 
 import Servidor.Passageiro;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
@@ -13,7 +14,7 @@ import java.util.GregorianCalendar;
  *
  * @author rcamposinhos
  */
-public class Viagem {
+public class Viagem implements Serializable{
 
     private static final float CUSTOUNIT = (float) 0.005; //custo por metro de percurso
     private static final float BANDEIRADA = 2;// custo por inicio do servico

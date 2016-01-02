@@ -16,31 +16,37 @@ public class Server {
 
     static BD baseDados;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         baseDados = null;
         String bdFilePath = null;
         int port;
         if (args.length == 0) {
             port = 2000;//2000 por omissao
-//            try {
-//                baseDados = load("bd.obj");
-//            } catch (Exception ex) {
-//                System.err.println(ex.getMessage()+".\nErro a ler bd.");
-//            }
             baseDados = new BD();//nova BD vazia
-            baseDados.loadSample();
-            System.out.println("Atribuída porta 2000."
-                    + "\nBase de dados inicializada vazia.");
+            try {
+                load("bd");
+            } catch (IOException | ClassNotFoundException ex) {
+                System.err.println(ex.getMessage() + ".\nErro a ler bd.");
+                baseDados.loadSample();
+                System.out.println("Atribuída porta 2000."
+                        + "\nBase de dados inicializada com user rui, miguel e diogo.");
+            }
 
         } else if (args.length == 1) {
             try {
                 port = Integer.parseInt(args[0]);
-                baseDados = new BD();//nova BD vazia
-                baseDados.loadSample();
-                System.out.println("Base de dados inicializada vazia.");
             } catch (NumberFormatException e) {
                 System.err.println(e.getMessage() + ".\nAtribuída porta 2000.");
                 port = 2000;
+            }
+            baseDados = new BD();//nova BD vazia
+            try {
+                load("bd");
+            } catch (IOException | ClassNotFoundException ex) {
+                System.err.println(ex.getMessage() + ".\nErro a ler bd.");
+                baseDados.loadSample();
+                System.out.println("Atribuída porta 2000."
+                        + "\nBase de dados inicializada com user rui, miguel e diogo.");
             }
         } else {
             try {
@@ -50,12 +56,14 @@ public class Server {
                 port = 2000;
             }
             bdFilePath = args[1];
+            baseDados = new BD();//nova BD vazia
             try {
-                baseDados = load(bdFilePath);//carrega ficheiro
-            } catch (Exception e) {
-                System.err.println("Não foi possível abrir o ficheiro."
-                        + "\nBase de dados inicializada vazia.");
-                baseDados = new BD();//nova BD vazia
+                load(bdFilePath);
+            } catch (IOException | ClassNotFoundException ex) {
+                System.err.println(ex.getMessage() + ".\nErro a ler bd.");
+                baseDados.loadSample();
+                System.out.println("Atribuída porta 2000."
+                        + "\nBase de dados inicializada com user rui, miguel e diogo.");
             }
         }
 
@@ -74,25 +82,11 @@ public class Server {
 
     }
 
-    public static BD load(String file) throws Exception {
-        BD res = null;
-        Object read;
-        try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-
-            //read = reader.readObject();
-            /*if (read instanceof BD) {
-             res = (BD) read;
-             res.setBdFilepath(file);
-             }*/
-            if (baseDados instanceof BD) {
-                baseDados = (BD) in.readObject();
-            }
-            in.close();
-        } catch (IOException | ClassNotFoundException i) {
-            i.getMessage();
+    public static void load(String file) throws IOException, ClassNotFoundException {
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+        if (baseDados instanceof BD) {
+            baseDados = (BD) in.readObject();
         }
-        return res;
     }
 
 }

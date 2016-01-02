@@ -18,36 +18,35 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos atencao aos locks de leitura e escrita
  */
-public class BD extends HashMap<String,User> implements Serializable{
+public class BD extends HashMap<String, User> implements Serializable {
 
     private String bdFilepath;
     private ReentrantLock l;
 
-    public BD(){
+    public BD() {
         super();
         this.bdFilepath = "bd";
         this.l = new ReentrantLock();
     }
 
-    
-    public Boolean login(String username, String password){
+    public Boolean login(String username, String password) {
         boolean flag = false;
         l.lock();
         User u = this.get(username);
-        if (u.getUser().equals(username) && u.getPass().equals(password)){
+        if (u.getUser().equals(username) && u.getPass().equals(password)) {
             flag = true;
         }
         l.unlock();
         return flag;
     }
-    
-    public Boolean registar(String username, String password){
+
+    public Boolean registar(String username, String password) throws IOException {
         boolean flag = true;
-        l.lock(); 
+        l.lock();
         this.put(username, new User(username, password));
-        if(!this.containsKey(username))
+        if (!this.containsKey(username)) {
             flag = false;
-        else{
+        } else {
             //persistencia de dados
             this.save(this.bdFilepath);
         }
@@ -62,23 +61,22 @@ public class BD extends HashMap<String,User> implements Serializable{
     public void setBdFilepath(String bdFilepath) {
         this.bdFilepath = bdFilepath;
     }
-    
-    public void save(String fileName){
-         try{
-             ObjectOutputStream out = new ObjectOutputStream(
-                     new FileOutputStream(fileName));
-             out.writeObject(this);
-             out.flush();
-             out.close();
-          }catch(IOException e){e.getMessage(); }
+
+    public void save(String fileName) throws IOException {
+        ObjectOutputStream out = new ObjectOutputStream(
+                new FileOutputStream(fileName));
+        out.writeObject(this);
+        out.flush();
+        out.close();
     }
-    
-    public void loadSample(){
-        User u1 = new User("rui","123");
-        this.put("rui",u1);
-        User u2 = new User("miguel","123");
-        this.put("miguel",u2);
-        User u3 = new User("diogo","123");
-        this.put("diogo",u3);
+
+    public void loadSample() throws IOException {
+        User u1 = new User("rui", "123");
+        this.put("rui", u1);
+        User u2 = new User("miguel", "123");
+        this.put("miguel", u2);
+        User u3 = new User("diogo", "123");
+        this.put("diogo", u3);
+        this.save(this.bdFilepath);
     }
 }

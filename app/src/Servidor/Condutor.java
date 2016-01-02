@@ -6,13 +6,14 @@
 package Servidor;
 
 
+import java.io.Serializable;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  * @author rcamposinhos
  */
-public class Condutor extends Passageiro{
+public class Condutor extends Passageiro implements Serializable{
 
     private String matricula;
     private String modelo;

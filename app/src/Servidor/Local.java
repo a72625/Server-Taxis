@@ -5,11 +5,13 @@
  */
 package Servidor;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rcamposinhos
  */
-public class Local {
+public class Local implements Serializable{
     private int x;//em metros
     private int y;//em metros
     

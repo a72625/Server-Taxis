@@ -5,6 +5,8 @@
  */
 package Servidor;
 
+import java.io.Serializable;
+
 
 /**
  *

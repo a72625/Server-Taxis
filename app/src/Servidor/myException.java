@@ -5,11 +5,13 @@
  */
 package Servidor;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Diogo Duarte
  */
-public class myException extends Exception {
+public class myException extends Exception implements Serializable{
 
     protected String myMessage;
 

@@ -5,6 +5,7 @@
  */
 package Servidor;
 
+import java.io.Serializable;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -12,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author rcamposinhos
  */
-public class User{
+public class User implements Serializable{
     
     private String user;
     private String pass;
