@@ -159,6 +159,11 @@ public class ServerThread extends Thread{
             //PROTOCOLO
             /*4,ja foi atribuida uma deslocacao,codigoViagem,
                         usernamePassageiro,xAtual,yAtual,xDest,yDest*/
+            //bloqueia para o passageiro criar viagem
+            rede.getLock().lock();
+            c.block();
+            rede.getLock().unlock();
+            //depois do passageiro desbloquear o condutor
             Viagem v = c.getViagem();
             long codigo = v.getCodigo();
             String passageiro = v.getPassageiro().getUser();

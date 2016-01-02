@@ -120,7 +120,7 @@ public class Rede implements Serializable{
         this.contViagens++;
         Viagem v = new Viagem(c, p,this.contViagens);
         this.viagens.put(this.contViagens,v);
-        l.unlock();
+        
         
         //remover das filas
         if(this.dequeueDriver(c) && this.dequeuePassenger(p)){
@@ -132,6 +132,7 @@ public class Rede implements Serializable{
         else{
             throw new myException("");
         }
+        l.unlock();
         
         return v;
     }
