@@ -128,28 +128,15 @@ public class ServerThread extends Thread{
             long espera = v.tempoEspera();
             long chegada = v.tempoViagem();
             float preco = v.custo();
-            /*3,condutor atribuido,nomeCondutor,matricula,modelo,
+            //PROTOCOLO envio:
+            /*3,condutor atribuido,codigoViagem,matricula,modelo,
                     tempo estimado de chegada à partida,
                     tempo estimado de chegada ao destino,
                     preco estimado
             */
-            cs.sendMessage("3,condutor atribuido"+","+c.getUser()+","
+            cs.sendMessage("3,condutor atribuido"+","+v.getCodigo()+","
                     +c.getMatricula()+","+c.getModelo()+","+espera+","
                     +chegada+","+ preco);
-            
-              //APAGAR:
-//            simular tempo de espera
-//            sleep(espera*1000);
-//            
-//            3,veiculo ja se encontra no local de partida
-//            cs.sendMessage("3,veiculo ja se encontra no local de partida");
-//            
-//            simular tempo de viagem
-//            sleep(v.tempoViagem()*1000);
-//            
-//            3,veiculo ja chegou ao local de destino,preco
-//            float preco = v.custo();
-//            cs.sendMessage("3,veiculo ja chegou ao local de destino,"+preco);
         } catch (InterruptedException | myException ex) {
             cs.sendMessage("3,nao foi possivel estabelecer viagem");
         }        
@@ -165,7 +152,29 @@ public class ServerThread extends Thread{
                                     Integer.parseInt(msg[5]));
         Condutor c = new Condutor(user, atual, rede, mat, mod);
         
-        //TODO:
+        try {
+            rede.enqueueDriver(c);         
+            //depois de acordar:
+            //PROTOCOLO
+            /*4,ja foi atribuida uma deslocacao,codigoViagem,
+                        usernamePassageiro,xAtual,yAtual,xDest,yDest*/
+            Viagem v = c.getViagem();
+            long codigo = v.getCodigo();
+            String passageiro = v.getPassageiro().getUser();
+            Local origem = v.getOrigem();
+            Local dest = v.getDestino();
+
+            cs.sendMessage("4,ja foi atribuida uma deslocacao"+","+codigo+","+
+                                passageiro + "," + origem.getX() + "," +  
+                                origem.getY() + "," + dest.getX() + "," +
+                                dest.getY());
+        
+        } catch (InterruptedException ex) {
+            cs.sendMessage("4,nao foi possivel estabelecer viagem");
+        }
+        
+        
+        
         
     }
 }

@@ -24,22 +24,38 @@ public class Viagem implements Serializable{
     private Local destino;
     private Local origem;
     private GregorianCalendar data;
+    private long codigo;
 
-    public Viagem(Condutor c, Passageiro p) {
+    public Viagem(Condutor c, Passageiro p, long cod) {
         this.c = c;
         this.p = p;
         this.destino = new Local(p.getDestino());
         this.origem = new Local(p.getPosAtual());
         this.data = new GregorianCalendar();
+        this.codigo = cod;
     }
 
-    public Viagem(Viagem v) {
+//    public Viagem(Viagem v) {
 //        this.c = v.getCondutor();
 //        this.p = v.getPassageiro();
-        this.destino = v.getDestino();
-        this.origem = v.getOrigem();
-        this.data = v.getData();
+//        this.destino = v.getDestino();
+//        this.origem = v.getOrigem();
+//        this.data = v.getData();
+//    }
+
+    public Condutor getCondutor() {
+        return c;
     }
+
+    public Passageiro getPassageiro() {
+        return p;
+    }
+
+    public long getCodigo() {
+        return codigo;
+    }
+    
+    
 
     public float custo() {
         return (BANDEIRADA + CUSTOUNIT * this.origem.manDist(this.destino));
@@ -104,8 +120,8 @@ public class Viagem implements Serializable{
         this.data = new GregorianCalendar();
     }
 
-    public Viagem clone() {
-        return new Viagem(this);
-    }
+//    public Viagem clone() {
+//        return new Viagem(this);
+//    }
 
 }

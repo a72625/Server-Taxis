@@ -5,14 +5,15 @@ package Servidor;
 import java.io.Serializable;
 import static java.lang.Integer.MAX_VALUE;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
  */
 public class Rede implements Serializable{
-
-    private ArrayList<Viagem> viagens;
+    private long contViagens; //para atribuir codigos
+    private HashMap<Long,Viagem> viagens;
     private ArrayList<Passageiro> passageirosQueue;
     private ArrayList<Condutor> condutoresQueue;
     private ReentrantLock l;
@@ -20,7 +21,8 @@ public class Rede implements Serializable{
     //passageiros acedem a condutoresQueue disponiveis mais proximos
     //condutores acedem a passageirosQueue por ordem da fila de espera FIFO
     public Rede() {
-        this.viagens = new ArrayList<>();
+        this.contViagens = 0;
+        this.viagens = new HashMap<>();
         this.passageirosQueue = new ArrayList<>();
         this.condutoresQueue = new ArrayList<>();
         l = new ReentrantLock();
@@ -34,8 +36,11 @@ public class Rede implements Serializable{
         l.lock();
         this.condutoresQueue.add(c);
         l.unlock();
+        
         //adormece ate haver passageiros a criar viagens
-        c.block();
+        while(c.getViagem() == null){
+            c.block();
+        }
     }
     
     public boolean dequeueDriver(Condutor c){
@@ -97,14 +102,17 @@ public class Rede implements Serializable{
     }
 
     public Viagem addViagem(Condutor c, Passageiro p) throws myException {
-        Viagem v = new Viagem(c, p);
         l.lock();
-        this.viagens.add(v);
+        this.contViagens++;
+        Viagem v = new Viagem(c, p,this.contViagens);
+        this.viagens.put(this.contViagens,v);
         l.unlock();
         
         //remover das filas
         if(this.dequeueDriver(c) && this.dequeuePassenger(p)){
+            //passa ref. da viagem ao condutor e
             //acorda thread do condutor para continuar a comunicacao dela
+            c.setViagem(v);
             c.unblock(); 
         }
         else{
