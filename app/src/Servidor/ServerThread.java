@@ -85,11 +85,11 @@ public class ServerThread extends Thread{
         
         if(!bd.containsKey(user)){
             cs.sendMessage("1,user nao existe");
-        }
-        else if(bd.login(user,pass)){
+        }else if(bd.isLoggedin(user, pass)){
+            cs.sendMessage("1,user ja esta autenticado");
+        }else if(bd.login(user,pass)){
             cs.sendMessage("1,ok");
-        }
-        else{
+        }else{
             cs.sendMessage("1,password errada");
         }   
     }

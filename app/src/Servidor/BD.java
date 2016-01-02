@@ -17,8 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -41,12 +39,18 @@ public class BD extends HashMap<String, User> implements Serializable {
         User u = super.get(username);
         if (u.getUser().equals(username) && u.getPass().equals(password)) {
             flag = true;
+            u.login();
         }
         l.unlock();
         return flag;
     }
 
-    public Boolean registar(String username, String password){
+    public Boolean isLoggedin(String username, String password) {
+        User u = super.get(username);
+        return u.getLogin();
+    }
+
+    public Boolean registar(String username, String password) {
         boolean flag = true;
         l.lock();
         super.put(username, new User(username, password));
@@ -55,9 +59,7 @@ public class BD extends HashMap<String, User> implements Serializable {
             this.save(this.bdFilepath);
         } catch (IOException ex) {
             flag = false;
-        }
-        
-        finally{
+        } finally {
             l.unlock();
             return flag;
         }
@@ -88,35 +90,33 @@ public class BD extends HashMap<String, User> implements Serializable {
         this.put("diogo", u3);
         this.save(this.bdFilepath);
     }
-    
-
 
     @Override
     public Object clone() {
         l.lock();
         Object o = super.clone();
         l.unlock();
-        return o; 
+        return o;
     }
 
     @Override
     public void replaceAll(BiFunction<? super String, ? super User, ? extends User> function) {
         l.lock();
-        super.replaceAll(function); 
+        super.replaceAll(function);
         l.unlock();
     }
 
     @Override
     public void forEach(BiConsumer<? super String, ? super User> action) {
         l.lock();
-        super.forEach(action); 
+        super.forEach(action);
         l.unlock();
     }
 
     @Override
     public User merge(String key, User value, BiFunction<? super User, ? super User, ? extends User> remappingFunction) {
         l.lock();
-        User u = super.merge(key, value, remappingFunction); 
+        User u = super.merge(key, value, remappingFunction);
         l.unlock();
         return u;
     }
@@ -124,7 +124,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public User compute(String key, BiFunction<? super String, ? super User, ? extends User> remappingFunction) {
         l.lock();
-        User u = super.compute(key, remappingFunction); 
+        User u = super.compute(key, remappingFunction);
         l.unlock();
         return u;
     }
@@ -132,7 +132,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public User computeIfPresent(String key, BiFunction<? super String, ? super User, ? extends User> remappingFunction) {
         l.lock();
-        User u = super.computeIfPresent(key, remappingFunction); 
+        User u = super.computeIfPresent(key, remappingFunction);
         l.unlock();
         return u;
     }
@@ -140,7 +140,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public User computeIfAbsent(String key, Function<? super String, ? extends User> mappingFunction) {
         l.lock();
-        User u = super.computeIfAbsent(key, mappingFunction); 
+        User u = super.computeIfAbsent(key, mappingFunction);
         l.unlock();
         return u;
     }
@@ -148,7 +148,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public User replace(String key, User value) {
         l.lock();
-        User u = super.replace(key, value); 
+        User u = super.replace(key, value);
         l.unlock();
         return u;
     }
@@ -156,7 +156,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public boolean replace(String key, User oldValue, User newValue) {
         l.lock();
-        boolean b = super.replace(key, oldValue, newValue); 
+        boolean b = super.replace(key, oldValue, newValue);
         l.unlock();
         return b;
     }
@@ -164,7 +164,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public boolean remove(Object key, Object value) {
         l.lock();
-        boolean b = super.remove(key, value); 
+        boolean b = super.remove(key, value);
         l.unlock();
         return b;
     }
@@ -172,7 +172,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public User putIfAbsent(String key, User value) {
         l.lock();
-        User u = super.putIfAbsent(key, value); 
+        User u = super.putIfAbsent(key, value);
         l.unlock();
         return u;
     }
@@ -180,7 +180,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public User getOrDefault(Object key, User defaultValue) {
         l.lock();
-        User u = super.getOrDefault(key, defaultValue); 
+        User u = super.getOrDefault(key, defaultValue);
         l.unlock();
         return u;
     }
@@ -188,7 +188,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public Set<Entry<String, User>> entrySet() {
         l.lock();
-        Set<Entry<String, User>> s = super.entrySet(); 
+        Set<Entry<String, User>> s = super.entrySet();
         l.unlock();
         return s;
     }
@@ -196,7 +196,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public Collection<User> values() {
         l.lock();
-        Collection<User> col = super.values(); 
+        Collection<User> col = super.values();
         l.unlock();
         return col;
     }
@@ -204,7 +204,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public Set<String> keySet() {
         l.lock();
-        Set<String> s = super.keySet(); 
+        Set<String> s = super.keySet();
         l.unlock();
         return s;
     }
@@ -212,7 +212,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public boolean containsValue(Object value) {
         l.lock();
-        boolean b = super.containsValue(value); 
+        boolean b = super.containsValue(value);
         l.unlock();
         return b;
     }
@@ -220,7 +220,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public void clear() {
         l.lock();
-        super.clear(); 
+        super.clear();
         l.unlock();
     }
 
@@ -235,14 +235,14 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public void putAll(Map<? extends String, ? extends User> m) {
         l.lock();
-        super.putAll(m); 
+        super.putAll(m);
         l.unlock();
     }
 
     @Override
     public User put(String key, User value) {
         l.lock();
-        User u = super.put(key, value); 
+        User u = super.put(key, value);
         l.unlock();
         return u;
     }
@@ -250,7 +250,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public boolean containsKey(Object key) {
         l.lock();
-        boolean b = super.containsKey(key); 
+        boolean b = super.containsKey(key);
         l.unlock();
         return b;
     }
@@ -258,7 +258,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public User get(Object key) {
         l.lock();
-        User u = super.get(key); 
+        User u = super.get(key);
         l.unlock();
         return u;
     }
@@ -266,7 +266,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public boolean isEmpty() {
         l.lock();
-        boolean b = super.isEmpty(); 
+        boolean b = super.isEmpty();
         l.unlock();
         return b;
     }
@@ -274,10 +274,9 @@ public class BD extends HashMap<String, User> implements Serializable {
     @Override
     public int size() {
         l.lock();
-        int n = super.size(); 
+        int n = super.size();
         l.unlock();
         return n;
     }
-    
-    
+
 }
