@@ -29,13 +29,13 @@ public class Viagem implements Serializable{
         this.c = c;
         this.p = p;
         this.destino = new Local(p.getDestino());
-        this.origem = new Local(p.getPosicao());
+        this.origem = new Local(p.getPosAtual());
         this.data = new GregorianCalendar();
     }
 
     public Viagem(Viagem v) {
-        this.c = v.getCondutor();
-        this.p = v.getPassageiro();
+//        this.c = v.getCondutor();
+//        this.p = v.getPassageiro();
         this.destino = v.getDestino();
         this.origem = v.getOrigem();
         this.data = v.getData();
@@ -47,7 +47,7 @@ public class Viagem implements Serializable{
 
     //tempo em segundos
     public long tempoEspera() {
-        return (long) (this.c.getPosicao().manDist(this.origem) / VELOCIDADE);
+        return (long) (this.c.getPosAtual().manDist(this.origem) / VELOCIDADE);
     }
 
     //tempo em segundos
@@ -64,21 +64,21 @@ public class Viagem implements Serializable{
                 + ", data=" + date + '}';
     }
 
-    public Condutor getCondutor() {
-        return new Condutor(c);
-    }
-
-    public void setCondutor(Condutor c) {
-        this.c = new Condutor(c);
-    }
-
-    public Passageiro getPassageiro() {
-        return new Passageiro(p);
-    }
-
-    public void setPassageiro(Passageiro p) {
-        this.p = new Passageiro(p);
-    }
+//    public Condutor getCondutor() {
+//        return new Condutor(c);
+//    }
+//
+//    public void setCondutor(Condutor c) {
+//        this.c = new Condutor(c);
+//    }
+//
+//    public Passageiro getPassageiro() {
+//        return new Passageiro(p);
+//    }
+//
+//    public void setPassageiro(Passageiro p) {
+//        this.p = new Passageiro(p);
+//    }
 
     public Local getDestino() {
         return new Local(destino);

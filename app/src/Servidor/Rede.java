@@ -30,19 +30,35 @@ public class Rede implements Serializable{
         return l;
     }
 
-    public void newDriver(Condutor c) {
+    public void enqueueDriver(Condutor c) throws InterruptedException {
         l.lock();
         this.condutoresQueue.add(c);
         l.unlock();
+        //adormece ate haver passageiros a criar viagens
+        c.block();
+    }
+    
+    public boolean dequeueDriver(Condutor c){
+        l.lock();
+        boolean aux = this.condutoresQueue.remove(c);
+        l.unlock();
+        return aux;
     }
 
-    public void newPassenger(Passageiro p) {
+    public void enqueuePassenger(Passageiro p) {
         l.lock();
         this.passageirosQueue.add(p);
         l.unlock();
     }
+    
+    public boolean dequeuePassenger(Passageiro p){
+        l.lock();
+        boolean aux = this.passageirosQueue.remove(p);
+        l.unlock();
+        return aux;
+    }
 
-    private Condutor closestDriver(Passageiro p) throws InterruptedException {
+    public Condutor closestDriver(Passageiro p) throws InterruptedException {
         Condutor aux = null;
         int minDist = MAX_VALUE;
         int auxDist;
@@ -51,12 +67,13 @@ public class Rede implements Serializable{
 
         l.lock();
 
-        while (this.condutoresQueue.isEmpty()) {
-            //p.block();
+        while(this.condutoresQueue.isEmpty()) {
+            //nao ha condutores -> adormece passageiro 
+            p.block();
         }
 
-        for (Condutor c : this.condutoresQueue) {
-            auxDist = c.getPosicao().manDist(p.getPosicao());
+        for(Condutor c : this.condutoresQueue) {
+            auxDist = c.getPosAtual().manDist(p.getPosAtual());
             if (auxDist < minDist) {
                 pos = i;
                 minDist = auxDist;
@@ -64,8 +81,8 @@ public class Rede implements Serializable{
             i++;
         }
 
-        //remover o mais perto da fila
-        aux = this.condutoresQueue.remove(pos);
+        //obter o mais perto da fila - so remove depois de criar a viagem
+        aux = this.condutoresQueue.get(pos);
 
         l.unlock();
 
@@ -75,14 +92,26 @@ public class Rede implements Serializable{
     private Passageiro nextPassageiro(Condutor c) {
 
         //while(this.passageirosQueue.isEmpty()) await
-        return this.passageirosQueue.remove(0);
+        return this.passageirosQueue.get(0);
 
     }
 
-    //LOCK!
-    public void addViagem(Condutor c, Passageiro p) {
-
-        this.viagens.add(new Viagem(c, p));
+    public Viagem addViagem(Condutor c, Passageiro p) throws myException {
+        Viagem v = new Viagem(c, p);
+        l.lock();
+        this.viagens.add(v);
+        l.unlock();
+        
+        //remover das filas
+        if(this.dequeueDriver(c) && this.dequeuePassenger(p)){
+            //acorda thread do condutor para continuar a comunicacao dela
+            c.unblock(); 
+        }
+        else{
+            throw new myException("");
+        }
+        
+        return v;
     }
 
     /*

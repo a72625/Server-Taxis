@@ -16,58 +16,59 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Passageiro implements Serializable{
     
     private String user;
-    private String pass;
-    private Local posicao;
+    private Local atual;
     private Local destino;
-    private Rede r;
     private Condition cond;
     
-    public Passageiro(String u, String p) {
+    public Passageiro(String u, Rede r) {
         this.user = u;
-        this.pass = p;
-        this.posicao = new Local();
+        this.atual = new Local();
         this.destino = new Local();
-        this.r = null;
-        this.cond = null;
+        this.cond = r.getLock().newCondition();
     }
     
-    public Passageiro(String u, String p, Local pos) {
+    public Passageiro(String u, Local a, Local d, Rede r) {
         this.user = u;
-        this.pass = p;
-        this.posicao = new Local(pos);
-        this.destino = new Local();
-        this.r = null;
-        this.cond = null;
+        this.atual = new Local(a);
+        this.destino = new Local(d);
+        this.cond = r.getLock().newCondition();
     }
-
-    public Passageiro(Passageiro p) {
-        this.user = p.getUser();
-        this.pass = p.getPass();
-        this.posicao = p.getPosicao();
-        this.destino = p.getDestino();
-        //this.lock = p.getLock();
-        //this.cond
+    
+    public Passageiro(String u, Local a, Rede r){
+        this.user = u;
+        this.atual = new Local(a);
+        this.destino = new Local();
+        this.cond = r.getLock().newCondition();
     }
 
     public String getUser() {
         return user;
     }
 
-    public String getPass() {
-        return pass;
-    }
-
-    public Local getPosicao() {
-        return new Local(posicao);
+    public Local getPosAtual() {
+        return new Local(atual);
     }
 
     public Local getDestino() {
         return new Local(destino);
     }
-    @Override
-    public String toString() {
-        return "Passageiro{" + "nome=" + this.getUser() + ", posicao="
-                + this.getPosicao() + '}';
+
+    public Condition getCond() {
+        return cond;
     }
+    
+    public void block() throws InterruptedException{
+        this.cond.await();
+    }
+    
+    public void unblock(){
+        this.cond.signal();
+    }
+    
+    
+    
+    
+
+
 
 }

@@ -18,16 +18,22 @@ public class Condutor extends Passageiro implements Serializable{
     private String matricula;
     private String modelo;
 
-    public Condutor(String u, String p, String mat, String mod, Local pos) {
-        super(u,p,pos);
+    public Condutor(String u, Rede r, String mat, String mod) {
+        super(u,r);
         this.matricula = mat;
         this.modelo = mod;
     }
     
-    public Condutor(Condutor c){
-        super(c);
-        this.matricula = c.getMatricula();
-        this.modelo = c.getModelo();
+    public Condutor(String u, Local a, Rede r,String mat, String mod){
+        super(u,a,r);
+        this.matricula = mat;
+        this.modelo = mod;
+    }
+    
+    public Condutor(String u, Local a, Local d, Rede r, String mat, String mod){
+        super(u,a,d,r);
+        this.matricula = mat;
+        this.modelo = mod;
     }
 
 
@@ -45,9 +51,10 @@ public class Condutor extends Passageiro implements Serializable{
     public void setModelo(String modelo) {
         this.modelo = modelo;
     }
-
+    
+ 
 //    public String toString() {
-//        return "Condutor{" + "posicao=" + this.getPosicao() + ", matricula="
+//        return "Condutor{" + "posicao=" + this.getPosAtual() + ", matricula="
 //                + matricula + ", modelo=" + modelo + '}';
 //    }
 
