@@ -177,10 +177,20 @@ public class Rede implements Serializable{
         l.unlock();
     }
     
-    void condutorAcordaPassageiro(long codViagem){
+    void condutorAcordaPassageiroPartida(long codViagem){
         l.lock();
         Viagem v = viagens.get(codViagem);
         Passageiro p = v.getPassageiro();
+        v.setCondutorNaOrigem(true);
+        p.signal();
+        l.unlock();
+    }
+    
+    void condutorAcordaPassageiroDestino(long codViagem){
+        l.lock();
+        Viagem v = viagens.get(codViagem);
+        Passageiro p = v.getPassageiro();
+        v.setCondutorNoDestino(true);
         p.signal();
         l.unlock();
     }

@@ -221,7 +221,7 @@ public class ServerThread extends Thread {
         //envia ok
         cs.sendMessage("5,ok,"+codViagem);
         //acorda thread passageiro
-        rede.condutorAcordaPassageiro(codViagem);    
+        rede.condutorAcordaPassageiroPartida(codViagem);
     }
 
     private void chegouPartidaCP(String[] msg) {
@@ -238,7 +238,7 @@ public class ServerThread extends Thread {
         //envia ok
         cs.sendMessage("7,ok,"+codViagem);
         //acorda thread passageiro
-        rede.condutorAcordaPassageiro(codViagem);
+        rede.condutorAcordaPassageiroDestino(codViagem);
     }
 
     private void chegouDestinoCP(String[] msg) {
