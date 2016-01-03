@@ -66,15 +66,11 @@ public class Passageiro implements Serializable{
     }
     
     public void await() throws InterruptedException{
-        this.l.lock();
         this.cond.await();
-        this.l.unlock();
     }
     
     public void signal(){
-        this.l.lock();
         this.cond.signal();
-        this.l.unlock();
     }
     
     public long getCodViagem() {

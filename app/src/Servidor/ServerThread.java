@@ -169,10 +169,16 @@ public class ServerThread extends Thread {
         try {
             Passageiro p = rede.nextPassageiro(c);
             //depois de acordar:
+            
+            //adormece se o passageiro ainda nao criou viagem
+            rede.condutorWaitViagem(c);
+            
+            //depois de acordar novamente:
             //PROTOCOLO
             /*4,ja foi atribuida uma deslocacao,codigoViagem,
              usernamePassageiro,xAtual,yAtual,xDest,yDest*/      
             long codigo = c.getCodViagem();
+            System.out.println(codigo);
             Viagem v = rede.getViagem(codigo);
             String passageiro = v.getPassageiro().getUser();
             Local origem = v.getOrigem();
