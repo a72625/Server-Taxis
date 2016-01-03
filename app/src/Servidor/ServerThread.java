@@ -78,6 +78,7 @@ public class ServerThread extends Thread {
             case '6':
                 //servidor avisa passageiro que cond. chegou partida
                 chegouPartidaCP(msg);
+                break;
             case '7':
                 //condutor avisa que chegou ao destino
                 chegouDestinoCC(msg);
@@ -85,6 +86,7 @@ public class ServerThread extends Thread {
             case '8':
                 //servidor avisa passageiro que cond. chegou destino
                 chegouDestinoCP(msg);
+                break;
             case '9':
                 //logout
                 logout(msg);
@@ -142,18 +144,31 @@ public class ServerThread extends Thread {
         try {
             Condutor c = rede.closestDriver(p);
             Viagem v = rede.addViagemPassageiro(c, p);
+            long codViagem = v.getCodigo();
             long espera = v.tempoEspera();
             long chegada = v.tempoViagem();
-            float preco = v.custo();
+            float precoEstimado = v.custo();
             //PROTOCOLO envio:
             /*3,condutor atribuido,codigoViagem,matricula,modelo,
              tempo estimado de chegada à partida,
              tempo estimado de chegada ao destino,
-             preco estimado
+             precoEstimado estimado
              */
             cs.sendMessage("3,condutor atribuido" + "," + v.getCodigo() + ","
                     +c.getMatricula() + "," + c.getModelo() + "," + espera + ","
-                    + chegada + "," + preco);
+                    + chegada + "," + precoEstimado);
+            
+            rede.passageiroWaitChegadaPartida(p);
+            //depois de acordar envia mensagem chegou:
+            //6,chegou ao local de partida, codigo da viagem
+            cs.sendMessage("6,chegou ao local de partida,"+codViagem);
+            
+            rede.passageiroWaitChegadaDestino(p);
+            //depois de acordar envia mensagem chegou:
+            //8,chegou ao local de destino, preco, codigo da viagem
+            float preco = v.getPreco();
+            cs.sendMessage("8,chegou ao local de destino,"+preco+","+codViagem);
+            
         } catch (InterruptedException | myException ex) {
             cs.sendMessage("3,nao foi possivel estabelecer viagem");
         }
@@ -200,19 +215,36 @@ public class ServerThread extends Thread {
     }
 
     private void chegouPartidaCC(String[] msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //PROTOCOLO:
+        //5,chegou ao local de partida, codigo da viagem
+        long codViagem = Long.parseLong(msg[2]);
+        //envia ok
+        cs.sendMessage("5,ok,"+codViagem);
+        //acorda thread passageiro
+        rede.condutorAcordaPassageiro(codViagem);    
     }
 
     private void chegouPartidaCP(String[] msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //6,ok,codigo da viagem 
+        //TODO: confirmar os oks para fechar viagem
     }
 
     private void chegouDestinoCC(String[] msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //PROTOCOLO:
+        //7,chegou ao local de destino,preco, codigo da viagem
+        float preco = Float.parseFloat(msg[2]);
+        long codViagem = Long.parseLong(msg[3]);
+        rede.setPrecoViagem(codViagem, preco);
+        //envia ok
+        cs.sendMessage("7,ok,"+codViagem);
+        //acorda thread passageiro
+        rede.condutorAcordaPassageiro(codViagem);
     }
 
     private void chegouDestinoCP(String[] msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //PROTOCOLO
+        //8,ok,codigo da viagem 
+        //TODO: confirmar os oks para fechar viagem
     }
     
     private void logout(String[] msg) {

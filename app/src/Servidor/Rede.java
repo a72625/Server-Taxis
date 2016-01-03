@@ -158,24 +158,37 @@ public class Rede implements Serializable{
         l.unlock();
     }
     
-    /*
-     public ArrayList<Viagem> listViagensByUser(Utilizador u){
-     ArrayList<Viagem> aux = new ArrayList<>();
-        
-     if(u.getClass().getName().equals("Passageiro")){
-     for(Viagem v : this.viagens){
-     if(v.getPassageiro().getUsername().equals(u.getUsername()))
-     aux.add(v.clone());
-     }
-     }
-     else if(u.getClass().getName().equals("Condutor")){
-     for(Viagem v : this.viagens){
-     if(v.getCondutor().getUsername().equals(u.getUsername()))
-     aux.add(v.clone());
-     }
-     }
-     return aux;
-        
-     }
-     */
+
+    void passageiroWaitChegadaPartida(Passageiro p) throws InterruptedException {
+        l.lock();
+        Viagem v = viagens.get(p.getCodViagem());
+        while(!v.isCondutorNaOrigem()){
+            p.await();
+        }
+        l.unlock();
+    }
+
+    void passageiroWaitChegadaDestino(Passageiro p) throws InterruptedException {
+        l.lock();
+        Viagem v = viagens.get(p.getCodViagem());
+        while(!v.isCondutorNoDestino()){
+            p.await();
+        }
+        l.unlock();
+    }
+    
+    void condutorAcordaPassageiro(long codViagem){
+        l.lock();
+        Viagem v = viagens.get(codViagem);
+        Passageiro p = v.getPassageiro();
+        p.signal();
+        l.unlock();
+    }
+    
+    void setPrecoViagem(long codViagem, float preco){
+        l.lock();
+        Viagem v = viagens.get(codViagem);
+        v.setPreco(preco);
+        l.unlock();
+    }
 }

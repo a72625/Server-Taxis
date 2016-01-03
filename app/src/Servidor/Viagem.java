@@ -27,6 +27,7 @@ public class Viagem implements Serializable{
     private long codigo;
     private boolean condutorNaOrigem;
     private boolean condutorNoDestino;
+    private float preco;
 
     public Viagem(Condutor c, Passageiro p, long cod) {
         this.c = c;
@@ -37,6 +38,7 @@ public class Viagem implements Serializable{
         this.codigo = cod;
         this.condutorNaOrigem = false;
         this.condutorNoDestino = false;
+        this.preco = -1;
     }
 
 //    public Viagem(Viagem v) {
@@ -58,6 +60,16 @@ public class Viagem implements Serializable{
     public long getCodigo() {
         return codigo;
     }
+
+    public float getPreco() {
+        return preco;
+    }
+
+    public void setPreco(float preco) {
+        this.preco = preco;
+    }
+    
+    
 
     public boolean isCondutorNaOrigem() {
         return condutorNaOrigem;
