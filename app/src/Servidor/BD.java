@@ -104,6 +104,8 @@ public class BD extends HashMap<String, User> implements Serializable {
         this.put("miguel", u2);
         User u3 = new User("diogo", "123");
         this.put("diogo", u3);
+        User u4 = new User("a", "a");
+        this.put("a", u4);
         this.save(this.bdFilepath);
     }
 
