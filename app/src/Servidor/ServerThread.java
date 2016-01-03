@@ -197,7 +197,6 @@ public class ServerThread extends Thread {
             /*4,ja foi atribuida uma deslocacao,codigoViagem,
              usernamePassageiro,xAtual,yAtual,xDest,yDest*/      
             long codigo = c.getCodViagem();
-            System.out.println(codigo);
             Viagem v = rede.getViagem(codigo);
             String passageiro = v.getPassageiro().getUser();
             Local origem = v.getOrigem();
