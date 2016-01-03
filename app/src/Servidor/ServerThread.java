@@ -36,10 +36,7 @@ public class ServerThread extends Thread {
             }
         } catch (IOException e) {
             System.err.println(e.toString());
-        } catch (myException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private String[] mySplit(String mensagem) {
@@ -48,7 +45,7 @@ public class ServerThread extends Thread {
         return str;
     }
 
-    public void dispacher(String mensagem) throws IOException, myException {
+    public void dispacher(String mensagem) throws IOException{
         //partir mensagem em campos:
         String[] msg = mySplit(mensagem);
         //ver codigo da mensagem:
@@ -93,10 +90,15 @@ public class ServerThread extends Thread {
                 break;
             default:
                 //mensagem mal recebida - codigo inexistente
+                cs.sendMessage("KO");
                 break;
         }
     }
 
+    /**
+     * CLIENTE USER INDIFERENCIADO
+     * @param msg 
+     */
     private void login(String[] msg) {
         //PROTOCOLO:
         //1,user,password
@@ -114,6 +116,10 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * CLIENTE USER INDIFERENCIADO
+     * @param msg 
+     */
     private void registar(String[] msg) {
         //PROTOCOLO:
         //2,user,password
@@ -125,10 +131,13 @@ public class ServerThread extends Thread {
         } else if (bd.registar(user, pass)) {
             cs.sendMessage("2,ok");
         } else {
-            cs.sendMessage("2,impossivel registar");
+            cs.sendMessage("KO");
         }
     }
-
+    /**
+     * CLIENTE PASSAGEIRO
+     * @param msg 
+     */
     private void solViagem(String[] msg) {
         //PROTOCOLO:
         //3,user,xAtual,yAtual,xDest,yDest
@@ -143,38 +152,48 @@ public class ServerThread extends Thread {
         rede.enqueuePassenger(p);
         try {
             Condutor c = rede.closestDriver(p);
-            Viagem v = rede.addViagemPassageiro(c, p);
-            long codViagem = v.getCodigo();
-            long espera = v.tempoEspera();
-            long chegada = v.tempoViagem();
-            float precoEstimado = v.custo();
-            //PROTOCOLO envio:
-            /*3,condutor atribuido,codigoViagem,matricula,modelo,
-             tempo estimado de chegada à partida,
-             tempo estimado de chegada ao destino,
-             precoEstimado estimado
-             */
-            cs.sendMessage("3,condutor atribuido" + "," + v.getCodigo() + ","
-                    +c.getMatricula() + "," + c.getModelo() + "," + espera + ","
-                    + chegada + "," + precoEstimado);
+            Viagem v = rede.addViagem(c, p);
+            if(v==null){//erro a criar viagem
+                cs.sendMessage("KO");
+            }
+            else{
+                long codViagem = v.getCodigo();
+                long espera = v.tempoEspera();
+                long chegada = v.tempoViagem();
+                float precoEstimado = v.custo();
+                //PROTOCOLO envio:
+                /*3,condutor atribuido,codigoViagem,matricula,modelo,
+                 tempo estimado de chegada à partida,
+                 tempo estimado de chegada ao destino,
+                 precoEstimado estimado
+                 */
+                cs.sendMessage("3,condutor atribuido" + "," + v.getCodigo() + 
+                        "," +c.getMatricula() + "," + c.getModelo() + "," + 
+                        espera + "," + chegada + "," + precoEstimado);
+
+                rede.passageiroWaitChegadaOrigem(p);
+                //depois de acordar envia mensagem chegou:
+                //6,chegou ao local de partida, codigo da viagem
+                cs.sendMessage("6,chegou ao local de partida,"+codViagem);
+
+                rede.passageiroWaitChegadaDestino(p);
+                //depois de acordar envia mensagem chegou:
+                //8,chegou ao local de destino, preco, codigo da viagem
+                float preco = v.getPreco();
+                cs.sendMessage("8,chegou ao local de destino,"+preco+","+
+                                                                    codViagem);
+            }
             
-            rede.passageiroWaitChegadaPartida(p);
-            //depois de acordar envia mensagem chegou:
-            //6,chegou ao local de partida, codigo da viagem
-            cs.sendMessage("6,chegou ao local de partida,"+codViagem);
-            
-            rede.passageiroWaitChegadaDestino(p);
-            //depois de acordar envia mensagem chegou:
-            //8,chegou ao local de destino, preco, codigo da viagem
-            float preco = v.getPreco();
-            cs.sendMessage("8,chegou ao local de destino,"+preco+","+codViagem);
-            
-        } catch (InterruptedException | myException ex) {
-            cs.sendMessage("3,nao foi possivel estabelecer viagem");
+        } catch (InterruptedException ex) {
+            cs.sendMessage("KO");
         }
     }
 
-    private void anunDisp(String[] msg) throws myException {
+    /**
+     * CLIENTE CONDUTOR
+     * @param msg 
+     */
+    private void anunDisp(String[] msg){
         //PROTOCOLO:
         //4,user,matricula,modelo,xAtual,yAtual
         String user = msg[1];
@@ -208,26 +227,46 @@ public class ServerThread extends Thread {
                     + dest.getY());
 
         } catch (InterruptedException ex) {
-            cs.sendMessage("4,nao foi possivel estabelecer viagem");
+            cs.sendMessage("KO");
         }
 
     }
 
+    /**
+     * CLIENTE CONDUTOR
+     * @param msg 
+     */
     private void chegouPartidaCC(String[] msg) {
         //PROTOCOLO:
         //5,chegou ao local de partida, codigo da viagem
         long codViagem = Long.parseLong(msg[2]);
+        //acorda thread passageiro
+        rede.condutorAcordaPassageiroOrigem(codViagem);
+        try {
+            //espera resposta
+            rede.condutorWaitPassageiroOrigem(codViagem);
+        } catch (InterruptedException ex) {
+            //envia ok
+            cs.sendMessage("KO");  
+        }
         //envia ok
         cs.sendMessage("5,ok,"+codViagem);
-        //acorda thread passageiro
-        rede.condutorAcordaPassageiroPartida(codViagem);
+        
     }
 
+    /**
+     * CLIENTE PASSAGEIRO
+     * @param msg 
+     */
     private void chegouPartidaCP(String[] msg) {
         //6,ok,codigo da viagem 
         //TODO: confirmar os oks para fechar viagem
     }
 
+    /**
+     * CLIENTE CONDUTOR
+     * @param msg 
+     */
     private void chegouDestinoCC(String[] msg) {
         //PROTOCOLO:
         //7,chegou ao local de destino,preco, codigo da viagem
@@ -240,12 +279,20 @@ public class ServerThread extends Thread {
         rede.condutorAcordaPassageiroDestino(codViagem);
     }
 
+    /**
+     * CLIENTE PASSAGEIRO
+     * @param msg 
+     */
     private void chegouDestinoCP(String[] msg) {
         //PROTOCOLO
         //8,ok,codigo da viagem 
         //TODO: confirmar os oks para fechar viagem
     }
     
+    /**
+     * CLIENTE USER INDIFERENCIADO
+     * @param msg 
+     */
     private void logout(String[] msg) {
         //PROTOCOLO:
         //9,user
@@ -254,7 +301,7 @@ public class ServerThread extends Thread {
             cs.sendMessage("9,ok");
         }
         else{
-            cs.sendMessage("9,nao foi possivel fazer logout");
+            cs.sendMessage("KO");
         }
     }
 }

@@ -31,6 +31,13 @@ public class Rede implements Serializable{
     public ReentrantLock getLock() {
         return l;
     }
+    
+    void setPrecoViagem(long codViagem, float preco){
+        l.lock();
+        Viagem v = viagens.get(codViagem);
+        v.setPreco(preco);
+        l.unlock();
+    }
 
     public void enqueueDriver(Condutor c){
         l.lock();
@@ -123,8 +130,10 @@ public class Rede implements Serializable{
      * @brief   adicionar uma nova viagem à rede
      *          criterio: é sempre o passageiro a adicionar
      *          o condutor adormece ate que a viagem esteja definida (cod!=-1)
+     * @return  a viagem criada
+     *          atencao pode retornar null se ocorreu um problema no dequeue
      */
-    public Viagem addViagemPassageiro(Condutor c, Passageiro p) throws myException {
+    public Viagem addViagem(Condutor c, Passageiro p){
         l.lock();
         Viagem v = null;
         //remover das filas
@@ -139,9 +148,7 @@ public class Rede implements Serializable{
             p.setViagem(codigo);
             c.signal(); 
         }
-        else{
-            throw new myException("");
-        }
+        
         l.unlock();
         
         return v;
@@ -159,7 +166,7 @@ public class Rede implements Serializable{
     }
     
 
-    void passageiroWaitChegadaPartida(Passageiro p) throws InterruptedException {
+    void passageiroWaitChegadaOrigem(Passageiro p) throws InterruptedException {
         l.lock();
         Viagem v = viagens.get(p.getCodViagem());
         while(!v.isCondutorNaOrigem()){
@@ -177,7 +184,7 @@ public class Rede implements Serializable{
         l.unlock();
     }
     
-    void condutorAcordaPassageiroPartida(long codViagem){
+    void condutorAcordaPassageiroOrigem(long codViagem){
         l.lock();
         Viagem v = viagens.get(codViagem);
         Passageiro p = v.getPassageiro();
@@ -194,11 +201,16 @@ public class Rede implements Serializable{
         p.signal();
         l.unlock();
     }
-    
-    void setPrecoViagem(long codViagem, float preco){
+   
+
+    void condutorWaitPassageiroOrigem(long codViagem) throws InterruptedException {
         l.lock();
         Viagem v = viagens.get(codViagem);
-        v.setPreco(preco);
+        while(!v.isPassageiroNaOrigem()){
+            v.getCondutor().await();
+        }
         l.unlock();
     }
+    
+
 }
