@@ -166,27 +166,6 @@ public class Rede implements Serializable{
         l.unlock();
     }
     
-//    public Viagem addViagemCondutor(Condutor c, Passageiro p) throws myException {
-//        l.lock();
-//        this.contViagens++;
-//        Viagem v = new Viagem(c, p,this.contViagens);
-//        this.viagens.put(this.contViagens,v);
-        
-        
-//        //remover das filas
-//        if(this.dequeueDriver(c) && this.dequeuePassenger(p)){
-//            //passa ref. da viagem ao condutor e
-//            //acorda thread do condutor para continuar a comunicacao dela
-//            p.setViagem(v);
-//            p.signal(); 
-//        }
-//        else{
-//            throw new myException("");
-//        }
-//        l.unlock();
-//        
-//        return v;
-//    }
     /*
      public ArrayList<Viagem> listViagensByUser(Utilizador u){
      ArrayList<Viagem> aux = new ArrayList<>();

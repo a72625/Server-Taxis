@@ -83,7 +83,12 @@ public class ServerThread extends Thread {
 
     public void logout(String[] msg) {
         String user = msg[1];
-        bd.logout(user);
+        if(bd.logout(user)){
+            cs.sendMessage("9,ok");
+        }
+        else{
+            cs.sendMessage("9,nao foi possivel fazer logout");
+        }
     }
 
     public void login(String[] msg) {
@@ -143,7 +148,7 @@ public class ServerThread extends Thread {
              preco estimado
              */
             cs.sendMessage("3,condutor atribuido" + "," + v.getCodigo() + ","
-                    + c.getMatricula() + "," + c.getModelo() + "," + espera + ","
+                    +c.getMatricula() + "," + c.getModelo() + "," + espera + ","
                     + chegada + "," + preco);
         } catch (InterruptedException | myException ex) {
             cs.sendMessage("3,nao foi possivel estabelecer viagem");
@@ -163,14 +168,10 @@ public class ServerThread extends Thread {
         rede.enqueueDriver(c);
         try {
             Passageiro p = rede.nextPassageiro(c);
-            //Viagem v = rede.addViagemCondutor(c, p);
             //depois de acordar:
             //PROTOCOLO
             /*4,ja foi atribuida uma deslocacao,codigoViagem,
-             usernamePassageiro,xAtual,yAtual,xDest,yDest*/
-            //bloqueia para o passageiro criar viagem
-            //rede.condutorWaitViagem(c);
-            //depois do passageiro desbloquear o condutor
+             usernamePassageiro,xAtual,yAtual,xDest,yDest*/      
             long codigo = c.getCodViagem();
             Viagem v = rede.getViagem(codigo);
             String passageiro = v.getPassageiro().getUser();
