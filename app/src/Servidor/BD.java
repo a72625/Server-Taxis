@@ -46,6 +46,7 @@ public class BD extends HashMap<String, User> implements Serializable {
     }
 
     public boolean logout(String username){
+        l.lock();
         boolean res = true;
         if(super.containsKey(username)){
             User u = super.get(username);
@@ -54,6 +55,7 @@ public class BD extends HashMap<String, User> implements Serializable {
         else{
             res = false;
         }
+        l.unlock();
         return res;
     }
     

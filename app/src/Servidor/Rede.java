@@ -36,17 +36,6 @@ public class Rede implements Serializable{
         l.lock();
         this.condutoresQueue.add(c);
         l.unlock();
-        
-//        //acorda passageiro eventualmente adormecido
-//        Passageiro p = this.nextPassageiro();
-//        if(p!= null)
-//            p.signal();
-//        
-//        
-//        //adormece ate haver passageiros
-//        while(c.getViagem() == null){
-//            c.await();
-//        }
     }
     
     public Viagem getViagem(long codigo){
@@ -157,7 +146,10 @@ public class Rede implements Serializable{
         
         return v;
     }
-    
+    /**
+     * @brief Para o caso do condutor querer iniciar a viagem, sem esta ter 
+     *          ainda sido criada pelo passageiro
+     */
     public void condutorWaitViagem(Condutor c) throws InterruptedException{
         l.lock();
         while(c.getCodViagem() == -1){
