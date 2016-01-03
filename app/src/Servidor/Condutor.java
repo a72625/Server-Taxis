@@ -16,27 +16,23 @@ public class Condutor extends Passageiro implements Serializable{
 
     private String matricula;
     private String modelo;
-    //private Viagem viagem;
 
     public Condutor(String u, Rede r, String mat, String mod) {
         super(u, r);
         this.matricula = mat;
         this.modelo = mod;
-    //    this.viagem = null;
     }
     
     public Condutor(String u, Local a, Rede r,String mat, String mod){
         super(u, a, r);
         this.matricula = mat;
         this.modelo = mod;
-    //    this.viagem = null;
     }
     
     public Condutor(String u, Local a, Local d, Rede r, String mat, String mod){
         super(u, a, d, r);
         this.matricula = mat;
         this.modelo = mod;
-    //    this.viagem = null;
     }
 
 

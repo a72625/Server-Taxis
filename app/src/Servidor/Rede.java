@@ -49,6 +49,14 @@ public class Rede implements Serializable{
 //        }
     }
     
+    public Viagem getViagem(long codigo){
+        Viagem v = null;
+        l.lock();
+        v = viagens.get(codigo);
+        l.unlock();
+        return v;
+    }
+    
     public boolean dequeueDriver(Condutor c){
         l.lock();
         boolean aux = this.condutoresQueue.remove(c);
@@ -103,30 +111,43 @@ public class Rede implements Serializable{
     public Passageiro nextPassageiro(Condutor c) throws InterruptedException {
         l.lock();
         Passageiro p = null;
-        while(this.passageirosQueue.isEmpty()){
+        //entra se a fila estiver vazia e se nao tiver viagem atribuida
+        while(this.passageirosQueue.isEmpty() && c.getCodViagem() == -1){
             c.await();
         }
-        p = this.passageirosQueue.get(0);
-        //acorda passageiro
-        p.signal();
+        if(c.getCodViagem() == -1){//cliente na fila de espera
+            p = this.passageirosQueue.get(0);
+            //acorda passageiro
+            p.signal();
+        }
+        else{//viagem atribuida
+            Viagem v = viagens.get(c.getCodViagem());
+            p = v.getPassageiro();
+        }
         l.unlock();
 
         return p;
 
     }
 
+    /**
+     * @brief   adicionar uma nova viagem à rede
+     *          criterio: é sempre o passageiro a adicionar
+     *          o condutor adormece ate que a viagem esteja definida (cod!=-1)
+     */
     public Viagem addViagemPassageiro(Condutor c, Passageiro p) throws myException {
         l.lock();
-        this.contViagens++;
-        Viagem v = new Viagem(c, p,this.contViagens);
-        this.viagens.put(this.contViagens,v);
-        
-        
+        Viagem v = null;
         //remover das filas
         if(this.dequeueDriver(c) && this.dequeuePassenger(p)){
+            this.contViagens++;
+            v = new Viagem(c, p,this.contViagens);
+            this.viagens.put(this.contViagens,v);
+            long codigo = v.getCodigo();
             //passa ref. da viagem ao condutor e
             //acorda thread do condutor para continuar a comunicacao dela
-            c.setViagem(v);
+            c.setViagem(codigo);
+            p.setViagem(codigo);
             c.signal(); 
         }
         else{
@@ -137,27 +158,35 @@ public class Rede implements Serializable{
         return v;
     }
     
-    public Viagem addViagemCondutor(Condutor c, Passageiro p) throws myException {
+    public void condutorWaitViagem(Condutor c) throws InterruptedException{
         l.lock();
-        this.contViagens++;
-        Viagem v = new Viagem(c, p,this.contViagens);
-        this.viagens.put(this.contViagens,v);
-        
-        
-        //remover das filas
-        if(this.dequeueDriver(c) && this.dequeuePassenger(p)){
-            //passa ref. da viagem ao condutor e
-            //acorda thread do condutor para continuar a comunicacao dela
-            p.setViagem(v);
-            p.signal(); 
-        }
-        else{
-            throw new myException("");
+        while(c.getCodViagem() == -1){
+            c.await();
         }
         l.unlock();
-        
-        return v;
     }
+    
+//    public Viagem addViagemCondutor(Condutor c, Passageiro p) throws myException {
+//        l.lock();
+//        this.contViagens++;
+//        Viagem v = new Viagem(c, p,this.contViagens);
+//        this.viagens.put(this.contViagens,v);
+        
+        
+//        //remover das filas
+//        if(this.dequeueDriver(c) && this.dequeuePassenger(p)){
+//            //passa ref. da viagem ao condutor e
+//            //acorda thread do condutor para continuar a comunicacao dela
+//            p.setViagem(v);
+//            p.signal(); 
+//        }
+//        else{
+//            throw new myException("");
+//        }
+//        l.unlock();
+//        
+//        return v;
+//    }
     /*
      public ArrayList<Viagem> listViagensByUser(Utilizador u){
      ArrayList<Viagem> aux = new ArrayList<>();

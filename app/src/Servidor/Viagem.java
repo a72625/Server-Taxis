@@ -25,6 +25,8 @@ public class Viagem implements Serializable{
     private Local origem;
     private GregorianCalendar data;
     private long codigo;
+    private boolean condutorNaOrigem;
+    private boolean condutorNoDestino;
 
     public Viagem(Condutor c, Passageiro p, long cod) {
         this.c = c;
@@ -33,6 +35,8 @@ public class Viagem implements Serializable{
         this.origem = new Local(p.getPosAtual());
         this.data = new GregorianCalendar();
         this.codigo = cod;
+        this.condutorNaOrigem = false;
+        this.condutorNoDestino = false;
     }
 
 //    public Viagem(Viagem v) {
@@ -54,6 +58,24 @@ public class Viagem implements Serializable{
     public long getCodigo() {
         return codigo;
     }
+
+    public boolean isCondutorNaOrigem() {
+        return condutorNaOrigem;
+    }
+
+    public void setCondutorNaOrigem(boolean condutorNaOrigem) {
+        this.condutorNaOrigem = condutorNaOrigem;
+    }
+
+    public boolean isCondutorNoDestino() {
+        return condutorNoDestino;
+    }
+
+    public void setCondutorNoDestino(boolean condutorNoDestino) {
+        this.condutorNoDestino = condutorNoDestino;
+    }
+    
+    
     
     
 

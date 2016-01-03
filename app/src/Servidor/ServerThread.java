@@ -163,18 +163,16 @@ public class ServerThread extends Thread {
         rede.enqueueDriver(c);
         try {
             Passageiro p = rede.nextPassageiro(c);
-            Viagem v = rede.addViagemCondutor(c, p);
+            //Viagem v = rede.addViagemCondutor(c, p);
             //depois de acordar:
             //PROTOCOLO
             /*4,ja foi atribuida uma deslocacao,codigoViagem,
              usernamePassageiro,xAtual,yAtual,xDest,yDest*/
             //bloqueia para o passageiro criar viagem
-            //rede.getLock().lock();
-            //c.await();
-            //rede.getLock().unlock();
+            //rede.condutorWaitViagem(c);
             //depois do passageiro desbloquear o condutor
-            //Viagem v = c.getViagem();
-            long codigo = v.getCodigo();
+            long codigo = c.getCodViagem();
+            Viagem v = rede.getViagem(codigo);
             String passageiro = v.getPassageiro().getUser();
             Local origem = v.getOrigem();
             Local dest = v.getDestino();
