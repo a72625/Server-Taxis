@@ -45,8 +45,15 @@ public class BD extends HashMap<String, User> implements Serializable {
         return flag;
     }
 
-    public Boolean isLoggedin(String username, String password) {
+    public void logout(String username){
         User u = super.get(username);
+        u.logout();
+    }
+    
+    public Boolean isLoggedin(String username, String password) {
+        l.lock();
+        User u = super.get(username);
+        l.unlock();
         return u.getLogin();
     }
 

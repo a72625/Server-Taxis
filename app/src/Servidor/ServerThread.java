@@ -14,47 +14,47 @@ import java.util.logging.Logger;
  *
  * @author rcamposinhos
  */
-public class ServerThread extends Thread{
+public class ServerThread extends Thread {
+
     private String msg;
     private BD bd;
     private Rede rede;
     private Connect cs;
-    
-    public ServerThread(Socket s, BD bd, Rede rede) throws IOException{
+
+    public ServerThread(Socket s, BD bd, Rede rede) throws IOException {
         this.cs = new Connect(s);
         this.msg = "";
         this.bd = bd;
         this.rede = rede;
-        
+
     }
-    
-    public void run(){
-        try{
-            while((msg = cs.readMessage()) != null){ 
+
+    public void run() {
+        try {
+            while ((msg = cs.readMessage()) != null) {
                 dispacher(msg);
             }
-        }
-         catch(IOException e){
+        } catch (IOException e) {
             System.err.println(e.toString());
         } catch (myException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
     }
-    
+
     private String[] mySplit(String mensagem) {
         String[] str;
         str = mensagem.split(",");
         return str;
     }
-    
-    public void dispacher(String mensagem) throws IOException, myException{
+
+    public void dispacher(String mensagem) throws IOException, myException {
         //partir mensagem em campos:
         String[] msg = mySplit(mensagem);
         //ver codigo da mensagem:
         char codigo = msg[0].charAt(0);
         //executar a mensagem com os campos:
-        switch(codigo){
+        switch (codigo) {
             case '1':
                 //login de utilizador
                 login(msg);
@@ -71,56 +71,63 @@ public class ServerThread extends Thread{
                 //condutor anuncia disponibilidade
                 anunDisp(msg);
                 break;
+            case '9':
+                //logout
+                logout(msg);
+                break;
             default:
                 //mensagem mal recebida - codigo inexistente
                 break;
         }
     }
-    
-    public void login(String[] msg){
+
+    public void logout(String[] msg) {
+        String user = msg[1];
+        bd.logout(user);
+    }
+
+    public void login(String[] msg) {
         //PROTOCOLO:
         //1,user,password
         String user = msg[1];
         String pass = msg[2];
-        
-        if(!bd.containsKey(user)){
+
+        if (!bd.containsKey(user)) {
             cs.sendMessage("1,user nao existe");
-        }else if(bd.isLoggedin(user, pass)){
+        } else if (bd.isLoggedin(user, pass)) {
             cs.sendMessage("1,user ja esta autenticado");
-        }else if(bd.login(user,pass)){
+        } else if (bd.login(user, pass)) {
             cs.sendMessage("1,ok");
-        }else{
+        } else {
             cs.sendMessage("1,password errada");
-        }   
+        }
     }
-    
-    public void registar(String[] msg){
+
+    public void registar(String[] msg) {
         //PROTOCOLO:
         //2,user,password
         String user = msg[1];
         String pass = msg[2];
-        
-        if(bd.containsKey(user)){
+
+        if (bd.containsKey(user)) {
             cs.sendMessage("2,user ja existe");
-        }
-        else if(bd.registar(user, pass)){
+        } else if (bd.registar(user, pass)) {
             cs.sendMessage("2,ok");
-        }
-        else{
+        } else {
             cs.sendMessage("2,impossivel registar");
         }
     }
-    
-    public void solViagem(String[] msg){
+
+    public void solViagem(String[] msg) {
         //PROTOCOLO:
         //3,user,xAtual,yAtual,xDest,yDest
         String user = msg[1];
-        Local atual = new Local(Integer.parseInt(msg[2]), 
-                                    Integer.parseInt(msg[3]));
-        Local destino = new Local(Integer.parseInt(msg[4]), 
-                                    Integer.parseInt(msg[5]));
+        Local atual = new Local(Integer.parseInt(msg[2]),
+                Integer.parseInt(msg[3]));
+        Local destino = new Local(Integer.parseInt(msg[4]),
+                Integer.parseInt(msg[5]));
         Passageiro p = new Passageiro(user, atual, destino, rede);
-        
+
         //adicionar novo passageiro a fila de espera
         rede.enqueuePassenger(p);
         try {
@@ -131,28 +138,28 @@ public class ServerThread extends Thread{
             float preco = v.custo();
             //PROTOCOLO envio:
             /*3,condutor atribuido,codigoViagem,matricula,modelo,
-                    tempo estimado de chegada à partida,
-                    tempo estimado de chegada ao destino,
-                    preco estimado
-            */
-            cs.sendMessage("3,condutor atribuido"+","+v.getCodigo()+","
-                    +c.getMatricula()+","+c.getModelo()+","+espera+","
-                    +chegada+","+ preco);
+             tempo estimado de chegada à partida,
+             tempo estimado de chegada ao destino,
+             preco estimado
+             */
+            cs.sendMessage("3,condutor atribuido" + "," + v.getCodigo() + ","
+                    + c.getMatricula() + "," + c.getModelo() + "," + espera + ","
+                    + chegada + "," + preco);
         } catch (InterruptedException | myException ex) {
             cs.sendMessage("3,nao foi possivel estabelecer viagem");
-        }        
+        }
     }
-    
-    public void anunDisp(String[] msg) throws myException{
+
+    public void anunDisp(String[] msg) throws myException {
         //PROTOCOLO:
         //4,user,matricula,modelo,xAtual,yAtual
         String user = msg[1];
         String mat = msg[2];
         String mod = msg[3];
-        Local atual = new Local(Integer.parseInt(msg[4]), 
-                                    Integer.parseInt(msg[5]));
+        Local atual = new Local(Integer.parseInt(msg[4]),
+                Integer.parseInt(msg[5]));
         Condutor c = new Condutor(user, atual, rede, mat, mod);
-        
+
         rede.enqueueDriver(c);
         try {
             Passageiro p = rede.nextPassageiro(c);
@@ -160,7 +167,7 @@ public class ServerThread extends Thread{
             //depois de acordar:
             //PROTOCOLO
             /*4,ja foi atribuida uma deslocacao,codigoViagem,
-                        usernamePassageiro,xAtual,yAtual,xDest,yDest*/
+             usernamePassageiro,xAtual,yAtual,xDest,yDest*/
             //bloqueia para o passageiro criar viagem
             //rede.getLock().lock();
             //c.await();
@@ -172,17 +179,14 @@ public class ServerThread extends Thread{
             Local origem = v.getOrigem();
             Local dest = v.getDestino();
 
-            cs.sendMessage("4,ja foi atribuida uma deslocacao"+","+codigo+","+
-                                passageiro + "," + origem.getX() + "," +  
-                                origem.getY() + "," + dest.getX() + "," +
-                                dest.getY());
-        
+            cs.sendMessage("4,ja foi atribuida uma deslocacao" + "," + codigo + ","
+                    + passageiro + "," + origem.getX() + ","
+                    + origem.getY() + "," + dest.getX() + ","
+                    + dest.getY());
+
         } catch (InterruptedException ex) {
             cs.sendMessage("4,nao foi possivel estabelecer viagem");
         }
-        
-        
-        
-        
+
     }
 }
