@@ -71,6 +71,20 @@ public class ServerThread extends Thread {
                 //condutor anuncia disponibilidade
                 anunDisp(msg);
                 break;
+            case '5':
+                //condutor avisa que chegou a partida
+                chegouPartidaCC(msg);
+                break;
+            case '6':
+                //servidor avisa passageiro que cond. chegou partida
+                chegouPartidaCP(msg);
+            case '7':
+                //condutor avisa que chegou ao destino
+                chegouDestinoCC(msg);
+                break;
+            case '8':
+                //servidor avisa passageiro que cond. chegou destino
+                chegouDestinoCP(msg);
             case '9':
                 //logout
                 logout(msg);
@@ -81,17 +95,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void logout(String[] msg) {
-        String user = msg[1];
-        if(bd.logout(user)){
-            cs.sendMessage("9,ok");
-        }
-        else{
-            cs.sendMessage("9,nao foi possivel fazer logout");
-        }
-    }
-
-    public void login(String[] msg) {
+    private void login(String[] msg) {
         //PROTOCOLO:
         //1,user,password
         String user = msg[1];
@@ -108,7 +112,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void registar(String[] msg) {
+    private void registar(String[] msg) {
         //PROTOCOLO:
         //2,user,password
         String user = msg[1];
@@ -123,7 +127,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void solViagem(String[] msg) {
+    private void solViagem(String[] msg) {
         //PROTOCOLO:
         //3,user,xAtual,yAtual,xDest,yDest
         String user = msg[1];
@@ -155,7 +159,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void anunDisp(String[] msg) throws myException {
+    private void anunDisp(String[] msg) throws myException {
         //PROTOCOLO:
         //4,user,matricula,modelo,xAtual,yAtual
         String user = msg[1];
@@ -193,5 +197,33 @@ public class ServerThread extends Thread {
             cs.sendMessage("4,nao foi possivel estabelecer viagem");
         }
 
+    }
+
+    private void chegouPartidaCC(String[] msg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void chegouPartidaCP(String[] msg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void chegouDestinoCC(String[] msg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void chegouDestinoCP(String[] msg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private void logout(String[] msg) {
+        //PROTOCOLO:
+        //9,user
+        String user = msg[1];
+        if(bd.logout(user)){
+            cs.sendMessage("9,ok");
+        }
+        else{
+            cs.sendMessage("9,nao foi possivel fazer logout");
+        }
     }
 }
