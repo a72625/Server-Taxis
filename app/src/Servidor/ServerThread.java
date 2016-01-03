@@ -272,13 +272,17 @@ public class ServerThread extends Thread {
      */
     private void chegouDestinoCC(String[] msg) {
         //PROTOCOLO:
-        //7,chegou ao local de destino,preco, codigo da viagem
+        //7,chegou ao local de destino,preco,codigo da viagem
         long codViagem = Long.parseLong(msg[3]);
+        Viagem v = rede.getViagem(codViagem);
+        float preco = Float.parseFloat(msg[2]);
+        v.setPreco(preco);
         rede.condutorAcordaPassageiroDestino(codViagem);
         //adormece e espera resposta do passageiro
         try {
             rede.condutorWaitPassageiroDestino(codViagem);
-            //depois de acordar, envia ok de resposta ao condutor
+            //depois de acordar, fixa o preco e envia ok de resposta ao condutor
+            
             cs.sendMessage("7,ok,"+codViagem);
         } catch (InterruptedException ex) {
             cs.sendMessage("KO");  
